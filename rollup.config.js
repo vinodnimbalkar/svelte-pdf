@@ -3,6 +3,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
+import builtins from 'rollup-plugin-node-builtins';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -24,6 +25,7 @@ export default {
 				css.write('public/build/bundle.css');
 			}
 		}),
+		builtins(),
 
 		// If you have external dependencies installed from
 		// npm, you'll most likely need these plugins. In

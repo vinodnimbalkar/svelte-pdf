@@ -16,7 +16,9 @@
     "svelte": "^3.0.0"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "pdfjs-dist": "^2.2.228",
+    "rollup-plugin-node-builtins": "^2.1.2",
     "sirv-cli": "^0.4.4"
   }
 }

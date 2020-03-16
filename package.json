@@ -1,6 +1,6 @@
 {
-  "name": "svelte-app",
-  "version": "1.0.0",
+  "name": "svelte-pdf",
+  "version": "1.0.0-beta.0",
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
@@ -26,5 +26,9 @@
   "dependencies": {
     "pdfjs-dist": "^2.2.228",
     "print-js": "^1.0.63"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vinodnimbalkar/svelte-pdf.git"
   }
 }

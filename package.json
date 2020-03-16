@@ -10,22 +10,21 @@
     "@fullhuman/postcss-purgecss": "^2.1.0",
     "@rollup/plugin-commonjs": "^11.0.0",
     "@rollup/plugin-node-resolve": "^7.0.0",
+    "es6-object-assign": "^1.1.0",
     "postcss": "^7.0.27",
     "postcss-load-config": "^2.1.0",
     "rollup": "^1.20.0",
     "rollup-plugin-livereload": "^1.0.0",
+    "rollup-plugin-node-builtins": "^2.1.2",
     "rollup-plugin-svelte": "^5.0.3",
     "rollup-plugin-terser": "^5.1.2",
+    "sirv-cli": "^0.4.5",
     "svelte": "^3.0.0",
     "svelte-preprocess": "^3.5.0",
     "tailwindcss": "^1.2.0"
   },
   "dependencies": {
-    "axios": "^0.19.2",
-    "es6-object-assign": "^1.1.0",
     "pdfjs-dist": "^2.2.228",
-    "print-js": "^1.0.63",
-    "rollup-plugin-node-builtins": "^2.1.2",
-    "sirv-cli": "^0.4.4"
+    "print-js": "^1.0.63"
   }
 }

@@ -1,10 +1,6 @@
-import App from './App.svelte';
+import { polyfill } from 'es6-object-assign';
+polyfill();
 
-const app = new App({
-	target: document.body,
-	props: {
-		name: 'world'
-	}
-});
+import PdfViewer from './PdfViewer.svelte';
 
-export default app;
+export default PdfViewer;

@@ -22,7 +22,9 @@
   },
   "dependencies": {
     "axios": "^0.19.2",
+    "es6-object-assign": "^1.1.0",
     "pdfjs-dist": "^2.2.228",
+    "print-js": "^1.0.63",
     "rollup-plugin-node-builtins": "^2.1.2",
     "sirv-cli": "^0.4.4"
   }

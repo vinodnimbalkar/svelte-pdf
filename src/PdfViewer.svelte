@@ -1,7 +1,9 @@
 <script>
   import pdfjs from "pdfjs-dist";
   import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
+  import printJS from "print-js";
   import Tooltip from "./utils/Tooltip.svelte";
+  import Tailwindcss from "./Tailwindcss.svelte";
 
   export let url;
   export let scale = 1.8;
@@ -98,7 +100,9 @@
     }
   };
 
-  const printPdf = url => {};
+  const printPdf = url => {
+    printJS({ printable: url, type: "pdf" });
+  };
 
   const clockwiseRotate = () => {
     rotation = rotation + 90;
@@ -130,6 +134,7 @@
   }
 </style>
 
+<Tailwindcss />
 <div class="flex flex-col mx-5">
   <div
     class="mx-10 mt-5 rounded overflow-auto h-screen shadow-lg bg-white border

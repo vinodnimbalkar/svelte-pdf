@@ -1,5 +1,6 @@
 <script>
-  import axios from 'axios';
+  import Tailwindcss from "./Tailwindcss.svelte";
+  import axios from "axios";
   import PdfViewer from "./PdfViewer.svelte";
 
   const callPdf = async () => {
@@ -19,6 +20,7 @@
   let src = callPdf();
 </script>
 
+<Tailwindcss />
 {#await src}
   <p>Loading...</p>
 {:then value}

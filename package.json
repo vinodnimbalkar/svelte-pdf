@@ -1,6 +1,9 @@
 {
   "name": "svelte-pdf",
+  "svelte": "src/index.js",
   "version": "1.0.0-beta.0",
+  "description": "svelte-pdf provides a component for rendering PDF documents using PDF.js",
+  "main" : "src/index.js",
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",

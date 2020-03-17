@@ -5,11 +5,12 @@ import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import builtins from 'rollup-plugin-node-builtins';
 import sveltePreprocess from 'svelte-preprocess';
+import globals from 'rollup-plugin-node-globals';
 
 const production = !process.env.ROLLUP_WATCH;
 
 export default {
-	input: 'src/main.js',
+	input: 'src/index.js',
 	output: {
 		sourcemap: true,
 		format: 'iife',
@@ -39,7 +40,7 @@ export default {
 			dedupe: ['svelte']
 		}),
 		commonjs(),
-
+		globals(),
 		// In dev mode, call `npm run start` once
 		// the bundle has been generated
 		!production && serve(),

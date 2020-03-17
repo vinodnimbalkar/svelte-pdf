@@ -1,9 +1,8 @@
 <script>
   import pdfjs from "pdfjs-dist";
   import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
-  import printJS from "print-js";
+  import onPrint from "./utils/print.js";
   import Tooltip from "./utils/Tooltip.svelte";
-  import Tailwindcss from "./Tailwindcss.svelte";
 
   export let url;
   export let scale = 1.8;
@@ -12,8 +11,6 @@
   pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
   let canvas;
-  let prev;
-  let next;
   let page_num;
   let pageCount;
   let pdfDoc = null;
@@ -101,7 +98,7 @@
   };
 
   const printPdf = url => {
-    printJS({ printable: url, type: "pdf" });
+    onPrint(url);
   };
 
   const clockwiseRotate = () => {
@@ -123,35 +120,89 @@
     pdfDoc = pdfDoc_;
     pageCount.textContent = pdfDoc.numPages;
     // Initial/first page rendering
-    console.log(typeof pageNum);
     renderPage(pageNum);
   });
 </script>
 
 <style>
-  .rot {
-    transform: rotate(180deg);
+  .parent {
+    display: flex;
+    flex-direction: column;
+    margin: 0 1.25rem;
+  }
+  .control {
+    margin-top: 1.25rem;
+    margin-bottom: 0;
+    margin-right: 2.5rem;
+    margin-left: 2.5rem;
+    border-radius: 0.25rem;
+    overflow: auto;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    background-color: #fff;
+    border-width: 1px;
+  }
+  .control-start {
+    padding: 1.25rem;
+  }
+  .line {
+    display: flex;
+    flex-direction: row;
+    font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+    border-top-width: 0px;
+    border-right-width: 0px;
+    border-bottom-width: 1px;
+    border-left-width: 0px;
+    border-color: #4fd1c5;
+    border-style: dotted;
+    margin-bottom: 0.75rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  .button-control {
+    display: flex;
+    flex-direction: row;
+    padding: 0.5rem;
+    margin: 0.75rem;
+    border-radius: 0.25rem;
+    overflow: hidden;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border-left-width: 1px;
+    border-bottom-width: 1px;
+    border-right-width: 1px;
+    cursor: pointer;
+  }
+  .viewer {
+    border-width: 1px;
+    border-color: #000;
+    border-style: solid;
+  }
+  .icon {
+    height: 1.25rem;
+    width: 1.25rem;
+    fill: currentColor;
+    color: #38b2ac;
+  }
+  .page-count {
+    display: flex;
+    flex-direction: row;
+    padding: 0.5rem;
+    margin: 0.75rem;
   }
 </style>
 
-<Tailwindcss />
-<div class="flex flex-col mx-5">
-  <div
-    class="mx-10 mt-5 rounded overflow-auto h-screen shadow-lg bg-white border
-    headnote-scroll">
-    <div class="p-5">
-      <div
-        class="flex flex-row font-serif border-b border-teal-400 border-dotted
-        mb-3 py-2 headnote-helper">
+<div class="parent">
+  <div class="control">
+    <div class="control-start">
+      <div class="line">
         <Tooltip>
           <span
             slot="activator"
-            class="flex flex-row p-2 mx-3 rounded overflow-hidden shadow-lg
-            border-l border-b border-r cursor-pointer"
-            bind:this={prev}
+            class="button-control"
             on:click={() => onPrevPage()}>
             <svg
-              class="h-5 w-5 mx-2 fill-current text-teal-500"
+              class="icon"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20">
               <polygon
@@ -164,12 +215,10 @@
         <Tooltip>
           <span
             slot="activator"
-            class="flex flex-row p-2 mx-3 rounded overflow-hidden shadow-lg
-            border-l border-b border-r cursor-pointer"
-            bind:this={next}
+            class="button-control"
             on:click={() => onNextPage()}>
             <svg
-              class="h-5 w-5 mx-2 fill-current text-teal-500"
+              class="icon"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20">
               <polygon
@@ -182,11 +231,10 @@
         <Tooltip>
           <span
             slot="activator"
-            class="flex flex-row p-2 mx-3 rounded overflow-hidden shadow-lg
-            border-l border-b border-r cursor-pointer"
+            class="button-control"
             on:click={() => onZoomIn()}>
             <svg
-              class="h-5 w-5 mx-2 fill-current text-teal-500"
+              class="icon"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20">
               <path
@@ -201,11 +249,10 @@
         <Tooltip>
           <span
             slot="activator"
-            class="flex flex-row p-2 mx-3 rounded overflow-hidden shadow-lg
-            border-l border-b border-r cursor-pointer"
+            class="button-control"
             on:click={() => onZoomOut()}>
             <svg
-              class="h-5 w-5 mx-2 fill-current text-teal-500"
+              class="icon"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20">
               <path
@@ -219,11 +266,10 @@
         <Tooltip>
           <span
             slot="activator"
-            class="flex flex-row p-2 mx-3 rounded shadow-lg border-l border-b
-            border-r cursor-pointer"
+            class="button-control"
             on:click={() => printPdf(url)}>
             <svg
-              class="h-5 w-5 mx-2 fill-current text-teal-500"
+              class="icon"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20">
               <path
@@ -236,11 +282,10 @@
         <Tooltip>
           <span
             slot="activator"
-            class="flex flex-row p-2 mx-3 rounded shadow-lg border-l border-b
-            border-r cursor-pointer"
+            class="button-control"
             on:click={() => antiClockwiseRotate()}>
             <svg
-              class="h-5 w-5 mx-2 fill-current text-teal-500 rot"
+              class="icon"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20">
               <path
@@ -253,11 +298,10 @@
         <Tooltip>
           <span
             slot="activator"
-            class="flex flex-row p-2 mx-3 rounded shadow-lg border-l border-b
-            border-r cursor-pointer"
+            class="button-control"
             on:click={() => clockwiseRotate()}>
             <svg
-              class="h-5 w-5 mx-2 fill-current text-teal-500"
+              class="icon"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20">
               <path
@@ -267,14 +311,14 @@
           </span>
           Clockwise
         </Tooltip>
-        <span class="flex flex-row p-2 mx-3">
+        <span class="page-count">
           Page :
           <span bind:this={page_num} />
           /
           <span bind:this={pageCount} />
         </span>
       </div>
-      <div class="border border-black border-solid">
+      <div class="viewer">
         <canvas
           bind:this={canvas}
           width={window.innerWidth}

@@ -1,10 +1,10 @@
 <script>
   import { scale, fade } from "svelte/transition";
   import { ClassBuilder } from "./classes.js";
-  const classesDefault = "tooltip whitespace-no-wrap text-xs absolute mt-2 bg-gray-600 text-gray-50 rounded md:px-2 md:py-2 py-4 px-3 z-30";
+  const classesDefault = "tooltip";
   let className = "";
   export let classes = classesDefault;
-  export {className as class};
+  export { className as class };
   export let show = false;
   export let timeout = null;
   const cb = new ClassBuilder(classes, classesDefault);
@@ -45,21 +45,36 @@
 </script>
 
 <style>
-.tooltip {
-  left: 50%;
-  transform: translateX(-50%);
-}
+  .tooltip {
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-size: 0.75rem;
+    position: absolute;
+    margin-top: 0.5rem;
+    background-color: #718096;
+    color: #fff;
+    border-radius: 0.25rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+    z-index: 30;
+  }
+  .activator {
+    position: relative;
+    display: inline-block;
+  }
 </style>
 
-<div class="relative inline-block">
+<div class="activator">
   <div
     on:mouseenter={debounce(showTooltip, 100)}
     on:mouseleave={debounce(hideTooltip, 500)}
     on:mouseenter
     on:mouseleave
     on:mouseover
-    on:mouseout
-  >
+    on:mouseout>
     <slot name="activator" />
   </div>
 
@@ -67,8 +82,7 @@
     <div
       in:scale={{ duration: 150 }}
       out:scale={{ duration: 150, delay: 100 }}
-      class={c}
-    >
+      class={c}>
       <slot />
     </div>
   {/if}

@@ -32,3 +32,12 @@ prop name            | type                   | default
 `url`              | `string`                 | `""`
 `scale`            | `float`                  | `1.8`
 `pageNum`          | `number`                 | `1`
+
+## Contributing
+
+Feel free to open an issue (or even better, send a Pull Request). Contributions are very welcome!! 😄
+
+
+## License
+
+**MIT &copy; [Vinod Nimbalkar](https://github.com/vinodnimbalkar/svelte-pdf/blob/master/LICENSE)**

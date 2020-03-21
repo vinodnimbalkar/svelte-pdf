@@ -1,7 +1,7 @@
 <script>
   import pdfjs from "pdfjs-dist";
   import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
-  import onPrint from "./utils/print.js";
+  import { onPrint, calcRT, getPageText } from "./utils/Helper.svelte";
   import Tooltip from "./utils/Tooltip.svelte";
 
   export let url;
@@ -11,12 +11,14 @@
   pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
   let canvas;
-  let page_num;
-  let pageCount;
+  let page_num = 0;
+  let pageCount = 0;
   let pdfDoc = null;
   let pageRendering = false;
   let pageNumPending = null;
   let rotation = 0;
+  let pdfContent = "";
+  let readingTime = 0;
 
   const renderPage = num => {
     pageRendering = true;
@@ -119,6 +121,15 @@
   loadingTask.promise.then(function(pdfDoc_) {
     pdfDoc = pdfDoc_;
     pageCount.textContent = pdfDoc.numPages;
+    let total_page = parseInt(pageCount.textContent);
+    for (let number = 1; number <= total_page; number++) {
+      // Extract the text
+      getPageText(number, pdfDoc).then(function(textPage) {
+        // Show the text of the page in the console
+        pdfContent = pdfContent.concat(textPage);
+        readingTime = calcRT(pdfContent);
+      });
+    }
     // Initial/first page rendering
     renderPage(pageNum);
   });
@@ -184,11 +195,16 @@
     fill: currentColor;
     color: #38b2ac;
   }
-  .page-count {
+  .page-info {
     display: flex;
     flex-direction: row;
-    padding: 0.5rem;
+    padding-top: 0.5rem;
     margin: 0.75rem;
+    overflow: hidden;
+  }
+  .text {
+    margin-left: 0.5rem;
+    cursor: default;
   }
 </style>
 
@@ -311,11 +327,34 @@
           </span>
           Clockwise
         </Tooltip>
-        <span class="page-count">
-          Page :
-          <span bind:this={page_num} />
-          /
-          <span bind:this={pageCount} />
+        <span class="page-info">
+          <svg
+            class="icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20">
+            <path
+              d="M16.32 7.1A8 8 0 1 1 9 4.06V2h2v2.06c1.46.18 2.8.76 3.9
+              1.62l1.46-1.46 1.42 1.42-1.46 1.45zM10 18a6 6 0 1 0 0-12 6 6 0 0 0
+              0 12zM7 0h6v2H7V0zm5.12 8.46l1.42 1.42L10 13.4 8.59 12l3.53-3.54z" />
+          </svg>
+          <span class="text">{readingTime} min read</span>
+        </span>
+        <span class="page-info">
+          <svg
+            class="icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20">
+            <path
+              d="M16 2h4v15a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3V0h16v2zm0 2v13a1 1 0 0
+              0 1 1 1 1 0 0 0 1-1V4h-2zM2 2v15a1 1 0 0 0 1 1h11.17a2.98 2.98 0 0
+              1-.17-1V2H2zm2 8h8v2H4v-2zm0 4h8v2H4v-2zM4 4h8v4H4V4z" />
+          </svg>
+          <div class="text">
+            Page :
+            <span bind:this={page_num} />
+            /
+            <span bind:this={pageCount} />
+          </div>
         </span>
       </div>
       <div class="viewer">

@@ -33,6 +33,20 @@ prop name            | type                   | default
 `scale`            | `float`                  | `1.8`
 `pageNum`          | `number`                 | `1`
 
+## Examples
+
+To view the examples, clone the **svelte-pdf** repo and install the dependencies:
+
+```bash
+$ git clone https://github.com/vinodnimbalkar/svelte-pdf.git
+$ cd example
+$ npm install
+$ npm run dev
+```
+
+Then run the **http://localhost:5000**:
+
+
 ## Contributing
 
 Feel free to open an issue (or even better, send a Pull Request). Contributions are very welcome!! 😄

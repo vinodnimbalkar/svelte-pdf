@@ -8,6 +8,11 @@ Simple svelte PDF Viewer component with controls like
 -	Rotation
 -	Print
 
+## Demo
+Source code of demo page is included in example directory.
+
+https://svelte-pdf.netlify.com
+
 ## How to install
 
 ```

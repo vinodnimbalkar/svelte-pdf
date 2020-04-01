@@ -19,6 +19,9 @@
   let rotation = 0;
   let pdfContent = "";
   let readingTime = 0;
+  let total_page = 0;
+  const minScale = 1.0;
+  const maxScale = 2.3;
 
   const renderPage = num => {
     pageRendering = true;
@@ -84,7 +87,7 @@
    * Display Zoom In
    */
   const onZoomIn = () => {
-    if (scale <= 2.3) {
+    if (scale <= maxScale) {
       scale = scale + 0.1;
       queueRenderPage(pageNum);
     }
@@ -93,7 +96,7 @@
    * Display Zoom Out
    */
   const onZoomOut = () => {
-    if (scale >= 1.0) {
+    if (scale >= minScale) {
       scale = scale - 0.1;
       queueRenderPage(pageNum);
     }
@@ -121,7 +124,7 @@
   loadingTask.promise.then(function(pdfDoc_) {
     pdfDoc = pdfDoc_;
     pageCount.textContent = pdfDoc.numPages;
-    let total_page = parseInt(pageCount.textContent);
+    total_page = parseInt(pageCount.textContent);
     for (let number = 1; number <= total_page; number++) {
       // Extract the text
       getPageText(number, pdfDoc).then(function(textPage) {
@@ -195,6 +198,10 @@
     fill: currentColor;
     color: #38b2ac;
   }
+  .disabled {
+    cursor: not-allowed;
+    box-shadow: none;
+  }
   .page-info {
     display: flex;
     flex-direction: row;
@@ -206,6 +213,9 @@
     margin-left: 0.5rem;
     cursor: default;
   }
+  .rot-icon {
+    transform: rotate(180deg);
+  }
 </style>
 
 <div class="parent">
@@ -215,7 +225,7 @@
         <Tooltip>
           <span
             slot="activator"
-            class="button-control"
+            class="button-control {pageNum <= 1 ? 'disabled' : null}"
             on:click={() => onPrevPage()}>
             <svg
               class="icon"
@@ -231,7 +241,7 @@
         <Tooltip>
           <span
             slot="activator"
-            class="button-control"
+            class="button-control {pageNum >= total_page ? 'disabled' : null}"
             on:click={() => onNextPage()}>
             <svg
               class="icon"
@@ -247,7 +257,7 @@
         <Tooltip>
           <span
             slot="activator"
-            class="button-control"
+            class="button-control {scale >= maxScale ? 'disabled' : null}"
             on:click={() => onZoomIn()}>
             <svg
               class="icon"
@@ -265,7 +275,7 @@
         <Tooltip>
           <span
             slot="activator"
-            class="button-control"
+            class="button-control {scale <= minScale ? 'disabled' : null}"
             on:click={() => onZoomOut()}>
             <svg
               class="icon"
@@ -301,7 +311,7 @@
             class="button-control"
             on:click={() => antiClockwiseRotate()}>
             <svg
-              class="icon"
+              class="icon rot-icon"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20">
               <path

@@ -19,7 +19,7 @@
   let rotation = 0;
   let pdfContent = "";
   let readingTime = 0;
-  let total_page = 0;
+  let totalPage = 0;
   const minScale = 1.0;
   const maxScale = 2.3;
 
@@ -124,8 +124,8 @@
   loadingTask.promise.then(function(pdfDoc_) {
     pdfDoc = pdfDoc_;
     pageCount.textContent = pdfDoc.numPages;
-    total_page = parseInt(pageCount.textContent);
-    for (let number = 1; number <= total_page; number++) {
+    totalPage = parseInt(pageCount.textContent);
+    for (let number = 1; number <= totalPage; number++) {
       // Extract the text
       getPageText(number, pdfDoc).then(function(textPage) {
         // Show the text of the page in the console
@@ -216,6 +216,81 @@
   .rot-icon {
     transform: rotate(180deg);
   }
+  /* 
+  ##Device = Low Resolution Tablets, Mobiles (Landscape)
+  ##Screen = B/w 481px to 767px
+  */
+
+  @media (min-width: 481px) and (max-width: 767px) {
+    .parent {
+      margin: 0;
+    }
+    .control {
+      margin: 0;
+    }
+    .control-start {
+      padding: 0;
+    }
+    .button-control {
+      display: flex;
+      flex-direction: row;
+      padding: 0.5rem;
+      margin: 0.5rem;
+      border-radius: 0.25rem;
+      overflow: hidden;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      border-left-width: 1px;
+      border-bottom-width: 1px;
+      border-right-width: 1px;
+      cursor: pointer;
+    }
+    .page-info {
+      display: none;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  /* 
+  ##Device = Most of the Smartphones Mobiles (Portrait)
+  ##Screen = B/w 320px to 479px
+  */
+
+  @media (min-width: 320px) and (max-width: 480px) {
+    .parent {
+      margin: 0;
+    }
+    .control {
+      margin: 0;
+    }
+    .control-start {
+      padding: 0;
+    }
+    .button-control {
+      display: flex;
+      flex-direction: row;
+      padding: 0.5rem;
+      margin: 0.5rem;
+      border-radius: 0.25rem;
+      overflow: hidden;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      border-left-width: 1px;
+      border-bottom-width: 1px;
+      border-right-width: 1px;
+      cursor: pointer;
+    }
+    .page-info {
+      display: none;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+    }
+  }
 </style>
 
 <div class="parent">
@@ -241,7 +316,7 @@
         <Tooltip>
           <span
             slot="activator"
-            class="button-control {pageNum >= total_page ? 'disabled' : null}"
+            class="button-control {pageNum >= totalPage ? 'disabled' : null}"
             on:click={() => onNextPage()}>
             <svg
               class="icon"

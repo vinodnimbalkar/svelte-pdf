@@ -217,6 +217,46 @@
     transform: rotate(180deg);
   }
   /* 
+  ##Device = Tablets, Ipads (portrait)
+  ##Screen = B/w 768px to 1024px
+  */
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .parent {
+      margin: 0;
+    }
+    .control {
+      margin: 0;
+    }
+    .control-start {
+      padding: 0;
+    }
+    .line {
+      justify-content: center;
+    }
+    .button-control {
+      display: flex;
+      flex-direction: row;
+      padding: 0.5rem;
+      margin: 0.5rem;
+      border-radius: 0.25rem;
+      overflow: hidden;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      border-left-width: 1px;
+      border-bottom-width: 1px;
+      border-right-width: 1px;
+      cursor: pointer;
+    }
+    .page-info {
+      display: none;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  /* 
   ##Device = Low Resolution Tablets, Mobiles (Landscape)
   ##Screen = B/w 481px to 767px
   */
@@ -230,6 +270,9 @@
     }
     .control-start {
       padding: 0;
+    }
+    .line {
+      justify-content: center;
     }
     .button-control {
       display: flex;
@@ -269,11 +312,14 @@
     .control-start {
       padding: 0;
     }
+    .line {
+      justify-content: center;
+    }
     .button-control {
       display: flex;
       flex-direction: row;
-      padding: 0.5rem;
-      margin: 0.5rem;
+      padding: 0.4rem;
+      margin: 0.4rem;
       border-radius: 0.25rem;
       overflow: hidden;
       box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),

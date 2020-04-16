@@ -7,6 +7,7 @@ Simple svelte PDF Viewer component with controls like
 -   Zoom
 -	Rotation
 -	Print
+-	AutoFlip Page
 
 ## Demo
 Source code of demo page is included in example directory.
@@ -26,7 +27,7 @@ npm install svelte-pdf
 	import PdfViewer from 'svelte-pdf';
 </script>
 
-<PdfViewer url='helloworld.pdf' />
+<PdfViewer url='./helloworld.pdf' />
 
 ```
 
@@ -37,6 +38,7 @@ prop name            | type                   | default
 `url`              | `string`                 | `""`
 `scale`            | `float`                  | `1.8`
 `pageNum`          | `number`                 | `1`
+`flipTime`		   | `number`				  | `120`
 
 ## Examples
 

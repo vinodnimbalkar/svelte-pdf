@@ -1,7 +1,7 @@
 {
   "name": "svelte-pdf",
   "svelte": "src/index.js",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "svelte-pdf provides a component for rendering PDF documents using PDF.js",
   "main": "src/index.js",
   "scripts": {
@@ -31,9 +31,11 @@
     "type": "git",
     "url": "https://github.com/vinodnimbalkar/svelte-pdf.git"
   },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vinodnimbalkar/svelte-pdf/issues"
   },
+  "homepage": "https://github.com/vinodnimbalkar/svelte-pdf#readme",
   "keywords": [
     "pdf",
     "svelte-pdf",

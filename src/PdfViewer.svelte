@@ -1,4 +1,5 @@
 <script>
+  import { onDestroy } from "svelte";
   import pdfjs from "pdfjs-dist";
   import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
   import { onPrint, calcRT, getPageText } from "./utils/Helper.svelte";
@@ -7,6 +8,7 @@
   export let url;
   export let scale = 1.8;
   export let pageNum = 1; //must be number
+  export let flipTime = 120; //by default 2 minute, value in seconds
 
   pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
@@ -20,6 +22,10 @@
   let pdfContent = "";
   let readingTime = 0;
   let totalPage = 0;
+  let autoFlip = false;
+  let interval;
+  let secondInterval;
+  let seconds = flipTime;
   const minScale = 1.0;
   const maxScale = 2.3;
 
@@ -136,6 +142,30 @@
     // Initial/first page rendering
     renderPage(pageNum);
   });
+
+  //turn page after certain time interval
+  const onPageTurn = () => {
+    autoFlip = !autoFlip;
+    if (autoFlip === false) {
+      clearInterval(interval); //stop autoflip
+      clearInterval(secondInterval); //stop countdown seconds
+    }
+    if (autoFlip === true && pageNum <= totalPage) {
+      //countdown seconds
+      secondInterval = setInterval(() => {
+        seconds = seconds - 1;
+      }, 1000);
+      interval = setInterval(() => {
+        seconds = flipTime; //reset second after page flip
+        onNextPage();
+      }, flipTime * 1000); //every {flipTime} seconds
+    }
+  };
+  //prevent memory leak
+  onDestroy(() => {
+    clearInterval(interval);
+    clearInterval(secondInterval);
+  });
 </script>
 
 <style>
@@ -172,6 +202,7 @@
     margin-bottom: 0.75rem;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
+    justify-content: center;
   }
   .button-control {
     display: flex;
@@ -457,6 +488,27 @@
             </svg>
           </span>
           Clockwise
+        </Tooltip>
+        <Tooltip>
+          <span
+            slot="activator"
+            class="page-info button-control"
+            on:click={() => onPageTurn()}>
+            <svg
+              class="icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20">
+              {#if autoFlip === true}
+                <path d="M4 18h12V6h-4V2H4v16zm-2 1V0h12l4 4v16H2v-1z" />
+              {:else}
+                <path
+                  d="M9.896,3.838L0.792,1.562v14.794l9.104,2.276L19,16.356V1.562L9.896,3.838z
+                  M9.327,17.332L1.93,15.219V3.27 l7.397,1.585V17.332z
+                  M17.862,15.219l-7.397,2.113V4.855l7.397-1.585V15.219z" />
+              {/if}
+            </svg>
+          </span>
+          Auto Turn Page
         </Tooltip>
         <span class="page-info">
           <svg

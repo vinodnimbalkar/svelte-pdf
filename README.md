@@ -33,12 +33,14 @@ npm install svelte-pdf
 
 ## Props
 
-prop name            | type                   | default
----------------------|------------------------|-------------------------
-`url`              | `string`                 | `""`
-`scale`            | `float`                  | `1.8`
-`pageNum`          | `number`                 | `1`
-`flipTime`		   | `number`				  | `120`
+prop name      | type            | default    | Required
+---------------|-----------------|------------|----------
+`url`          | `string`        | `""`       | `Yes`
+`scale`        | `float`         | `1.8`      | `No`  
+`pageNum`      | `number`        | `1`        | `No`
+`flipTime`		 | `number`				 | `120`      | `No`
+`showButtons`	 | `boolean`			 |	`true`    | `No`
+`showBorder`	 | `boolean`			 |	`true`    | `No`
 
 ## Examples
 

@@ -52,9 +52,39 @@ $ cd example
 $ npm install
 $ npm run dev
 ```
-
 Then run the **http://localhost:5000**:
 
+
+## How to use it in Sapper with SSR enabled
+
+### 1. Install it as part of `devDependencies`
+> When using Svelte components installed from npm, it needs the original component source (rather than any precompiled JavaScript that ships with the component). This allows the component to be rendered server-side, and also keeps your client-side app smaller...
+      -- [Rich Harris](https://github.com/Rich-Harris/svelte-workshop#using-external-components)
+
+We have to install `svelte-pdf` as part of `devDependencies`
+
+```bash
+npm install -D svelte-pdf
+```
+...this will cause it to get bundled (and therefore compiled) with your app.
+
+### 2. Make our `PdfViewer` component SSR compatible
+Since out `PdfViewer` component has a dependency on `window` object, we have to use dynamic import, from within the `onMount` function (which is only called on the client), so that our import code is never called on the server. [Refer to the official doc here...](https://sapper.svelte.dev/docs#Making_a_component_SSR_compatible)
+
+```bash
+
+<script>
+  import { onMount } from "svelte";
+  let PdfViewer;
+
+  onMount(async () => {
+    const module = await import("svelte-pdf");
+    PdfViewer = module.default;
+  });
+</script>
+
+<svelte:component this={PdfViewer} url="YOUR-PDF-URL"/>
+```
 
 ## Contributing
 

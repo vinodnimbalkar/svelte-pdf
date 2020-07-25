@@ -2,6 +2,7 @@
   import { onDestroy } from "svelte";
   import pdfjs from "pdfjs-dist";
   import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
+  import FileSaver from "file-saver";
   import { onPrint, calcRT, getPageText } from "./utils/Helper.svelte";
   import Tooltip from "./utils/Tooltip.svelte";
 
@@ -172,6 +173,11 @@
         onNextPage();
       }, flipTime * 1000); //every {flipTime} seconds
     }
+  };
+  //Download pdf function
+  const downloadPdf = fileURL => {
+    let fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1);
+    FileSaver.saveAs(fileURL, fileName);
   };
   //prevent memory leak
   onDestroy(() => {
@@ -522,6 +528,20 @@
               </svg>
             </span>
             Clockwise
+          </Tooltip>
+          <Tooltip>
+            <span
+              slot="activator"
+              class="button-control"
+              on:click={() => downloadPdf(url)}>
+              <svg
+                class="icon"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20">
+                <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
+              </svg>
+            </span>
+            Download
           </Tooltip>
           <Tooltip>
             <span

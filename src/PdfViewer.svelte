@@ -1,5 +1,5 @@
 <script>
-  import { onDestroy } from "svelte";
+  import { onDestroy, tick } from "svelte";
   import pdfjs from "pdfjs-dist";
   import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
   import FileSaver from "file-saver";
@@ -30,6 +30,9 @@
   let secondInterval;
   let seconds = flipTime;
   let pages = [];
+  let password = "";
+  let passwordError = false;
+  let passwordMessage = "";
   const minScale = 1.0;
   const maxScale = 2.3;
 
@@ -135,26 +138,42 @@
     queueRenderPage(pageNum);
   };
 
+  const onPasswordSubmit = () => {
+    initialLoad();
+  };
+
   /**
    * Asynchronously downloads PDF.
    */
 
-  let loadingTask = pdfjs.getDocument(url);
-  loadingTask.promise.then(function(pdfDoc_) {
-    pdfDoc = pdfDoc_;
-    showButtons === true ? (pageCount.textContent = pdfDoc.numPages) : null;
-    showButtons === true ? (totalPage = parseInt(pageCount.textContent)) : null;
-    for (let number = 1; number <= totalPage; number++) {
-      // Extract the text
-      getPageText(number, pdfDoc).then(function(textPage) {
-        // Show the text of the page in the console
-        pdfContent = pdfContent.concat(textPage);
-        readingTime = calcRT(pdfContent);
+  const initialLoad = async () => {
+    let loadingTask = pdfjs.getDocument({ url, password });
+    loadingTask.promise
+      .then(async function(pdfDoc_) {
+        pdfDoc = pdfDoc_;
+        passwordError = false;
+        await tick();
+        showButtons === true ? (pageCount.textContent = pdfDoc.numPages) : null;
+        showButtons === true
+          ? (totalPage = parseInt(pageCount.textContent))
+          : null;
+        for (let number = 1; number <= totalPage; number++) {
+          // Extract the text
+          getPageText(number, pdfDoc).then(function(textPage) {
+            // Show the text of the page in the console
+            pdfContent = pdfContent.concat(textPage);
+            readingTime = calcRT(pdfContent);
+          });
+        }
+        // Initial/first page rendering
+        renderPage(pageNum);
+      })
+      .catch(function(error) {
+        passwordError = true;
+        passwordMessage = error.message;
       });
-    }
-    // Initial/first page rendering
-    renderPage(pageNum);
-  });
+  };
+  initialLoad();
 
   //turn page after certain time interval
   const onPageTurn = () => {
@@ -194,6 +213,40 @@
     display: flex;
     flex-direction: column;
     margin: 0 1.25rem;
+  }
+  .password-viewer {
+    border-width: 1px;
+    border-color: #000;
+    border-style: solid;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    widows: 100%;
+  }
+  .password-message {
+    color: red;
+    margin: 8px 0px;
+  }
+  .password-container {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin: 8px 0px;
+  }
+  .password-input {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    padding: 8px;
+    width: 200px;
+  }
+  .password-button {
+    background-color: rgb(53, 126, 221);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    color: rgb(255, 255, 255);
+    border-left-color: transparent;
+    cursor: pointer;
+    padding: 8px 16px;
   }
   .control {
     margin-top: 1.25rem;
@@ -410,7 +463,18 @@
 
 <div class="parent">
   <div class={showBorder === true ? 'control' : 'null'}>
-    {#if showButtons === true}
+    {#if passwordError === true}
+      <div class="password-viewer">
+        <p>This document requires a password to open:</p>
+        <p class="password-message">{passwordMessage}</p>
+        <div class="password-container">
+          <input type="password" class="password-input" bind:value={password} />
+          <button on:click={onPasswordSubmit} class="password-button">
+            Submit
+          </button>
+        </div>
+      </div>
+    {:else if showButtons === true}
       <div class="control-start" name="top">
         <div class="line">
           <Tooltip>

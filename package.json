@@ -1,7 +1,7 @@
 {
   "name": "svelte-pdf",
   "svelte": "src/index.js",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "svelte-pdf provides a component for rendering PDF documents using PDF.js",
   "main": "src/index.js",
   "scripts": {
@@ -20,13 +20,13 @@
     "rollup-plugin-node-builtins": "^2.1.2",
     "rollup-plugin-node-globals": "^1.4.0",
     "rollup-plugin-svelte": "^5.0.3",
-    "rollup-plugin-terser": "^5.1.2",
+    "rollup-plugin-terser": "^7.0.2",
     "sirv-cli": "^0.4.5",
     "svelte": "^3.0.0"
   },
   "dependencies": {
     "file-saver": "^2.0.2",
-    "pdfjs-dist": "^2.2.228"
+    "pdfjs-dist": "^2.5.207"
   },
   "repository": {
     "type": "git",

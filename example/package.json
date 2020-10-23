@@ -19,6 +19,6 @@
   },
   "dependencies": {
     "sirv-cli": "^0.4.4",
-    "svelte-pdf": "^1.0.1"
+    "svelte-pdf": "^1.0.7"
   }
 }

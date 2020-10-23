@@ -324,7 +324,7 @@
     cursor: default;
   }
   .rot-icon {
-    transform: rotate(180deg);
+    transform : scaleX(-1)
   }
   #topBtn {
     position: fixed;

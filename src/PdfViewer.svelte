@@ -154,17 +154,18 @@
         pdfDoc = pdfDoc_;
         passwordError = false;
         await tick();
+
         showButtons === true ? (pageCount.textContent = pdfDoc.numPages) : null;
-        showButtons === true
-          ? (totalPage = parseInt(pageCount.textContent))
-          : null;
-        for (let number = 1; number <= totalPage; number++) {
-          // Extract the text
-          getPageText(number, pdfDoc).then(function(textPage) {
-            // Show the text of the page in the console
-            pdfContent = pdfContent.concat(textPage);
-            readingTime = calcRT(pdfContent);
-          });
+        totalPage = pdfDoc.numPages;
+        if (showButtons === true) {
+          for (let number = 1; number <= totalPage; number++) {
+            // Extract the text
+            getPageText(number, pdfDoc).then(function(textPage) {
+              // Show the text of the page in the console
+              pdfContent = pdfContent.concat(textPage);
+              readingTime = calcRT(pdfContent);
+            });
+          }
         }
         isInitialised = true;
       })

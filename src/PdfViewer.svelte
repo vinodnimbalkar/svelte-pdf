@@ -12,6 +12,7 @@
   export let flipTime = 120; //by default 2 minute, value in seconds
   export let showButtons = true; //boolean
   export let showBorder = true; //boolean
+  export let totalPage = 0;
 
   pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
@@ -24,7 +25,6 @@
   let rotation = 0;
   let pdfContent = "";
   let readingTime = 0;
-  let totalPage = 0;
   let autoFlip = false;
   let interval;
   let secondInterval;
@@ -33,6 +33,7 @@
   let password = "";
   let passwordError = false;
   let passwordMessage = "";
+  let isInitialised = false;
   const minScale = 1.0;
   const maxScale = 2.3;
 
@@ -153,20 +154,20 @@
         pdfDoc = pdfDoc_;
         passwordError = false;
         await tick();
+
         showButtons === true ? (pageCount.textContent = pdfDoc.numPages) : null;
-        showButtons === true
-          ? (totalPage = parseInt(pageCount.textContent))
-          : null;
-        for (let number = 1; number <= totalPage; number++) {
-          // Extract the text
-          getPageText(number, pdfDoc).then(function(textPage) {
-            // Show the text of the page in the console
-            pdfContent = pdfContent.concat(textPage);
-            readingTime = calcRT(pdfContent);
-          });
+        totalPage = pdfDoc.numPages;
+        if (showButtons === true) {
+          for (let number = 1; number <= totalPage; number++) {
+            // Extract the text
+            getPageText(number, pdfDoc).then(function(textPage) {
+              // Show the text of the page in the console
+              pdfContent = pdfContent.concat(textPage);
+              readingTime = calcRT(pdfContent);
+            });
+          }
         }
-        // Initial/first page rendering
-        renderPage(pageNum);
+        isInitialised = true;
       })
       .catch(function(error) {
         passwordError = true;
@@ -179,6 +180,7 @@
       });
   };
   initialLoad();
+  $: if (isInitialised) queueRenderPage(pageNum);
 
   //turn page after certain time interval
   const onPageTurn = () => {

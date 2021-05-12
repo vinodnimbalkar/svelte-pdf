@@ -13,7 +13,7 @@
     "@fullhuman/postcss-purgecss": "^2.1.0",
     "@rollup/plugin-commonjs": "^11.0.0",
     "@rollup/plugin-node-resolve": "^7.0.0",
-    "postcss": "^7.0.27",
+    "postcss": "^8.2.10",
     "postcss-load-config": "^2.1.0",
     "rollup": "^1.20.0",
     "rollup-plugin-livereload": "^1.0.0",

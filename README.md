@@ -52,7 +52,7 @@ To view the examples, clone the **svelte-pdf** repo and install the dependencies
 
 ```bash
 $ git clone https://github.com/vinodnimbalkar/svelte-pdf.git
-$ cd example
+$ cd svelte-pdf
 $ npm install
 $ npm run dev
 ```

@@ -73,8 +73,8 @@
     on:mouseleave={debounce(hideTooltip, 500)}
     on:mouseenter
     on:mouseleave
-    on:mouseover
-    on:mouseout>
+    on:focus
+    on:blur>
     <slot name="activator" />
   </div>
 

@@ -1,7 +1,7 @@
 {
   "name": "svelte-pdf",
   "svelte": "src/index.js",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "svelte-pdf provides a component for rendering PDF documents using PDF.js",
   "main": "src/index.js",
   "type": "module",
@@ -26,8 +26,8 @@
     "svelte": "^3.0.0"
   },
   "dependencies": {
-    "file-saver": "^2.0.2",
-    "pdfjs-dist": "^2.5.207"
+    "file-saver": "^2.0.5",
+    "pdfjs-dist": "^2.13.216"
   },
   "repository": {
     "type": "git",

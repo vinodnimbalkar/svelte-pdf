@@ -23,7 +23,7 @@
   }
   function hideTooltip() {
     if (!show) return;
-    
+
     show = false;
     clearTimeout(timeout);
   }

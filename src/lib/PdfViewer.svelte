@@ -7,6 +7,7 @@
   import Tooltip from "./utils/Tooltip.svelte";
 
   export let url;
+  export let data;
   export let scale = 1.8;
   export let pageNum = 1; //must be number
   export let flipTime = 120; //by default 2 minute, value in seconds
@@ -148,7 +149,11 @@
    */
 
   const initialLoad = async () => {
-    let loadingTask = pdfjs.getDocument({ url, password });
+    let loadingTask = pdfjs.getDocument({
+      ...(url && { url }),
+      ...(data && { data }),
+      ...(password && { password }),
+    });
     loadingTask.promise
       .then(async function (pdfDoc_) {
         pdfDoc = pdfDoc_;
@@ -172,11 +177,6 @@
       .catch(function (error) {
         passwordError = true;
         passwordMessage = error.message;
-        if (passwordMessage === "Failed to fetch") {
-          //This API enables cross-origin requests to anywhere.
-          url = `https://cors-anywhere.herokuapp.com/${url}`;
-          initialLoad();
-        }
       });
   };
   initialLoad();

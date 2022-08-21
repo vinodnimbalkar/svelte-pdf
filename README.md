@@ -25,13 +25,33 @@ npm install svelte-pdf
 ```
 
 ## How to use
-
+#### Using local path
 ```js
 <script>
 	import PdfViewer from 'svelte-pdf';
 </script>
 
-<PdfViewer url='./helloworld.pdf' />
+<PdfViewer url='./sample.pdf' />
+
+```
+#### Using url
+```js
+<script>
+	import PdfViewer from 'svelte-pdf';
+</script>
+
+<PdfViewer url='https://raw.githubusercontent.com/vinodnimbalkar/svelte-pdf/369db2f9edbf5ab8c87184193e1404340729bb3a/public/sample.pdf' />
+
+```
+#### Using `base64` encoded string
+```js
+<script>
+	import PdfViewer from 'svelte-pdf';
+  const base64 =
+    "JVBERi0xLjcKCjEgMCBvYmogICUgZW50cnkgcG9pbnQKPDwKICAvVHlwZSAvQ2F0YWxvZwogIC9QYWdlcyAyIDAgUgo+PgplbmRvYmoKCjIgMCBvYmoKPDwKICAvVHlwZSAvUGFnZXMKICAvTWVkaWFCb3ggWyAwIDAgMjAwIDIwMCBdCiAgL0NvdW50IDEKICAvS2lkcyBbIDMgMCBSIF0KPj4KZW5kb2JqCgozIDAgb2JqCjw8CiAgL1R5cGUgL1BhZ2UKICAvUGFyZW50IDIgMCBSCiAgL1Jlc291cmNlcyA8PAogICAgL0ZvbnQgPDwKICAgICAgL0YxIDQgMCBSIAogICAgPj4KICA+PgogIC9Db250ZW50cyA1IDAgUgo+PgplbmRvYmoKCjQgMCBvYmoKPDwKICAvVHlwZSAvRm9udAogIC9TdWJ0eXBlIC9UeXBlMQogIC9CYXNlRm9udCAvVGltZXMtUm9tYW4KPj4KZW5kb2JqCgo1IDAgb2JqICAlIHBhZ2UgY29udGVudAo8PAogIC9MZW5ndGggNDQKPj4Kc3RyZWFtCkJUCjcwIDUwIFRECi9GMSAxMiBUZgooSGVsbG8sIHdvcmxkISkgVGoKRVQKZW5kc3RyZWFtCmVuZG9iagoKeHJlZgowIDYKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDEwIDAwMDAwIG4gCjAwMDAwMDAwNzkgMDAwMDAgbiAKMDAwMDAwMDE3MyAwMDAwMCBuIAowMDAwMDAwMzAxIDAwMDAwIG4gCjAwMDAwMDAzODAgMDAwMDAgbiAKdHJhaWxlcgo8PAogIC9TaXplIDYKICAvUm9vdCAxIDAgUgo+PgpzdGFydHhyZWYKNDkyCiUlRU9G";
+</script>
+
+<PdfViewer data={atob(base64)} />
 
 ```
 
@@ -39,7 +59,8 @@ npm install svelte-pdf
 
 | prop name     | type      | default | Required |
 | ------------- | --------- | ------- | -------- |
-| `url`         | `string`  | `""`    | `Yes`    |
+| `url`         | `string`  | `N/A`   | `Yes`    |
+| `data`        | `string`  | `N/A`   | `No`     |
 | `scale`       | `float`   | `1.8`   | `No`     |
 | `pageNum`     | `number`  | `1`     | `No`     |
 | `flipTime`    | `number`  | `120`   | `No`     |

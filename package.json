@@ -1,8 +1,8 @@
 {
   "name": "svelte-pdf",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "svelte-pdf provides a component for rendering PDF documents using PDF.js",
-  "main": "src/index.js",
+  "main": "index.js",
   "type": "module",
   "scripts": {
     "dev": "vite dev",

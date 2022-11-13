@@ -25,7 +25,9 @@ npm install svelte-pdf
 ```
 
 ## How to use
+
 #### Using local path
+
 ```js
 <script>
 	import PdfViewer from 'svelte-pdf';
@@ -34,7 +36,9 @@ npm install svelte-pdf
 <PdfViewer url='./sample.pdf' />
 
 ```
+
 #### Using url
+
 ```js
 <script>
 	import PdfViewer from 'svelte-pdf';
@@ -43,7 +47,9 @@ npm install svelte-pdf
 <PdfViewer url='https://raw.githubusercontent.com/vinodnimbalkar/svelte-pdf/369db2f9edbf5ab8c87184193e1404340729bb3a/public/sample.pdf' />
 
 ```
+
 #### Using `base64` encoded string
+
 ```js
 <script>
 	import PdfViewer from 'svelte-pdf';
@@ -64,7 +70,7 @@ npm install svelte-pdf
 | `scale`       | `float`   | `1.8`   | `No`     |
 | `pageNum`     | `number`  | `1`     | `No`     |
 | `flipTime`    | `number`  | `120`   | `No`     |
-| `showButtons` | `boolean` | `true`  | `No`     |
+| `showButtons` | `array`   | `["navigation", "zoom", "print", "rotate", "download", "autoflip", "timeInfo", "pageInfo"]`  | `No`     |
 | `showBorder`  | `boolean` | `true`  | `No`     |
 
 ## Examples

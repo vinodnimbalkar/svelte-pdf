@@ -11,7 +11,16 @@
   export let scale = 1.8;
   export let pageNum = 1; //must be number
   export let flipTime = 120; //by default 2 minute, value in seconds
-  export let showButtons = true; //boolean
+  export let showButtons = [
+    "navigation",
+    "zoom",
+    "print",
+    "rotate",
+    "download",
+    "autoflip",
+    "timeInfo",
+    "pageInfo",
+  ]; //array
   export let showBorder = true; //boolean
   export let totalPage = 0;
 
@@ -75,7 +84,7 @@
     });
 
     // Update page counters
-    showButtons === true ? (page_num.textContent = num) : null;
+    showButtons.length ? (page_num.textContent = num) : null;
   };
 
   const queueRenderPage = (num) => {
@@ -160,9 +169,9 @@
         passwordError = false;
         await tick();
 
-        showButtons === true ? (pageCount.textContent = pdfDoc.numPages) : null;
+        showButtons.length ? (pageCount.textContent = pdfDoc.numPages) : null;
         totalPage = pdfDoc.numPages;
-        if (showButtons === true) {
+        if (showButtons.length) {
           for (let number = 1; number <= totalPage; number++) {
             // Extract the text
             getPageText(number, pdfDoc).then(function (textPage) {
@@ -229,9 +238,10 @@
           </button>
         </div>
       </div>
-    {:else if showButtons === true}
+    {:else if showButtons.length}
       <div class="control-start">
         <div class="line">
+        {#if showButtons.includes("navigation")}
           <Tooltip>
             <span
               slot="activator"
@@ -270,6 +280,8 @@
             </span>
             Next
           </Tooltip>
+          {/if}
+          {#if showButtons.includes("zoom")}
           <Tooltip>
             <span
               slot="activator"
@@ -312,6 +324,8 @@
             </span>
             Zoom Out
           </Tooltip>
+          {/if}
+          {#if showButtons.includes("print")}
           <Tooltip>
             <span
               slot="activator"
@@ -331,6 +345,8 @@
             </span>
             Print
           </Tooltip>
+          {/if}
+          {#if showButtons.includes("rotate")}
           <Tooltip>
             <span
               slot="activator"
@@ -369,6 +385,8 @@
             </span>
             Clockwise
           </Tooltip>
+          {/if}
+          {#if showButtons.includes("download")}
           <Tooltip>
             <span
               slot="activator"
@@ -385,6 +403,8 @@
             </span>
             Download
           </Tooltip>
+          {/if}
+          {#if showButtons.includes("autoflip")}
           <Tooltip>
             <span
               slot="activator"
@@ -409,7 +429,13 @@
             </span>
             {autoFlip === true ? seconds : "Auto Turn Page"}
           </Tooltip>
-          <span class="page-info">
+          {/if}
+          <span
+            class="page-info"
+            style={showButtons.includes("timeInfo")
+              ? ""
+              : "display: none;"}
+          >
             <svg
               class="icon"
               xmlns="http://www.w3.org/2000/svg"
@@ -424,7 +450,12 @@
             </svg>
             <span class="text">{readingTime} min read</span>
           </span>
-          <span class="page-info">
+          <span
+            class="page-info"
+            style={showButtons.includes("pageInfo")
+              ? ""
+              : "display: none;"}
+          >
             <svg
               class="icon"
               xmlns="http://www.w3.org/2000/svg"

@@ -259,7 +259,7 @@
                 />
               </svg>
             </span>
-            Prevoius
+            Previous
           </Tooltip>
           <Tooltip>
             <span

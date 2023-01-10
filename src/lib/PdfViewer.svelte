@@ -23,6 +23,7 @@
   ]; //array
   export let showBorder = true; //boolean
   export let totalPage = 0;
+  export let downloadFileName = '';
 
   pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
@@ -211,7 +212,7 @@
   };
   //Download pdf function
   const downloadPdf = (fileURL) => {
-    let fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1);
+    let fileName = downloadFileName || fileURL.substring(fileURL.lastIndexOf("/") + 1);
     FileSaver.saveAs(fileURL, fileName);
   };
   //prevent memory leak

@@ -72,6 +72,7 @@ npm install svelte-pdf
 | `flipTime`    | `number`  | `120`   | `No`     |
 | `showButtons` | `array`   | `["navigation", "zoom", "print", "rotate", "download", "autoflip", "timeInfo", "pageInfo"]`  | `No`     |
 | `showBorder`  | `boolean` | `true`  | `No`     |
+| `downloadFileName` | `string` | `N/A` | `No`   |
 
 ## Examples
 

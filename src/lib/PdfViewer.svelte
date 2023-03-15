@@ -1,7 +1,6 @@
 <script>
   import { onDestroy, tick } from "svelte";
   import * as pdfjs from "pdfjs-dist";
-  import pdfjsWorker from "pdfjs-dist/build/pdf.worker.min.js?url";
   import FileSaver from "file-saver";
   import { onPrint, calcRT, getPageText } from "./utils/Helper.svelte";
   import Tooltip from "./utils/Tooltip.svelte";
@@ -25,7 +24,7 @@
   export let totalPage = 0;
   export let downloadFileName = '';
 
-  pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+  pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.js', import.meta.url);
 
   let canvas;
   let page_num = 0;

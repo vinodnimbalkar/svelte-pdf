@@ -1,8 +1,7 @@
 <script>
   import { onDestroy, tick } from "svelte";
   import * as pdfjs from "pdfjs-dist";
-  import FileSaver from "file-saver";
-  import { onPrint, calcRT, getPageText } from "./utils/Helper.svelte";
+  import { onPrint, calcRT, getPageText, savePDF } from "./utils/Helper.svelte";
   import Tooltip from "./utils/Tooltip.svelte";
 
   export let url;
@@ -210,9 +209,10 @@
     }
   };
   //Download pdf function
-  const downloadPdf = (fileURL) => {
-    let fileName = downloadFileName || fileURL.substring(fileURL.lastIndexOf("/") + 1);
-    FileSaver.saveAs(fileURL, fileName);
+  const downloadPdf = ({ url: fileURL, data }) => {
+    let fileName =
+      downloadFileName || fileURL && fileURL.substring(fileURL.lastIndexOf("/") + 1);
+    savePDF({ fileURL, data, name: fileName });
   };
   //prevent memory leak
   onDestroy(() => {
@@ -391,7 +391,7 @@
             <span
               slot="activator"
               class="button-control"
-              on:click={() => downloadPdf(url)}
+              on:click={() => downloadPdf({url, data})}
             >
               <svg
                 class="icon"

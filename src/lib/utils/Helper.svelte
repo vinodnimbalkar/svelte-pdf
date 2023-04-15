@@ -61,4 +61,33 @@
       });
     });
   };
+
+  /**
+   * Saves a PDF Blob as a file with the given name.
+   *
+   * @param {String} fileUrl - The PDF url to save.
+   * @param {String} data - base64 decoded string
+   * @param {string} name - The name to use for the saved file.
+   */
+   export const savePDF = async ({ fileUrl, data, name = "download.pdf" }) => {
+    const link = document.createElement("a");
+    link.download = name;
+    link.rel = "noopener";
+    if (!fileUrl) {
+      fileUrl = `data:application/pdf;base64,${btoa(data)}`;
+    }
+    let blobs = await fetch(fileUrl).then((r) => r.blob());
+    if (!blobs || !(blobs instanceof Blob)) {
+      console.log("Invalid blob object passed to URL.createObjectURL()");
+    }
+    if (typeof URL.createObjectURL === "undefined") {
+      console.log("Your browser does not support URL.createObjectURL()");
+    }
+
+    const url = URL.createObjectURL(blobs);
+    link.href = url;
+    link.click();
+    // Revoke the object URL to free up memory
+    URL.revokeObjectURL(link.href);
+  };
 </script>

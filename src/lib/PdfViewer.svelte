@@ -247,6 +247,7 @@
               slot="activator"
               class="button-control {pageNum <= 1 ? 'disabled' : null}"
               on:click={() => onPrevPage()}
+              on:keydown
             >
               <svg
                 class="icon"
@@ -266,6 +267,7 @@
               slot="activator"
               class="button-control {pageNum >= totalPage ? 'disabled' : null}"
               on:click={() => onNextPage()}
+              on:keydown
             >
               <svg
                 class="icon"
@@ -287,6 +289,7 @@
               slot="activator"
               class="button-control {scale >= maxScale ? 'disabled' : null}"
               on:click={() => onZoomIn()}
+              on:keydown
             >
               <svg
                 class="icon"
@@ -308,6 +311,7 @@
               slot="activator"
               class="button-control {scale <= minScale ? 'disabled' : null}"
               on:click={() => onZoomOut()}
+              on:keydown
             >
               <svg
                 class="icon"
@@ -331,6 +335,7 @@
               slot="activator"
               class="button-control"
               on:click={() => printPdf(url)}
+              on:keydown
             >
               <svg
                 class="icon"
@@ -352,6 +357,7 @@
               slot="activator"
               class="button-control"
               on:click={() => antiClockwiseRotate()}
+              on:keydown
             >
               <svg
                 class="icon rot-icon"
@@ -371,6 +377,7 @@
               slot="activator"
               class="button-control"
               on:click={() => clockwiseRotate()}
+              on:keydown
             >
               <svg
                 class="icon"
@@ -392,6 +399,7 @@
               slot="activator"
               class="button-control"
               on:click={() => downloadPdf({url, data})}
+              on:keydown
             >
               <svg
                 class="icon"
@@ -410,6 +418,7 @@
               slot="activator"
               class="page-info button-control"
               on:click={() => onPageTurn()}
+              on:keydown
             >
               <svg
                 class="icon"

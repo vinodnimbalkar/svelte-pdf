@@ -1,3 +1,3 @@
-import PdfViewer from './PdfViewer.svelte'
+import PdfViewer from "./PdfViewer.svelte";
 
-export default PdfViewer
+export default PdfViewer;

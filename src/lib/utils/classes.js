@@ -9,10 +9,10 @@ function getClass(prop, color, depth, defaultDepth) {
 
 export default function utils(color, defaultDepth = 500) {
   return {
-    bg: depth => getClass("bg", color, depth, defaultDepth),
-    border: depth => getClass("border", color, depth, defaultDepth),
-    txt: depth => getClass("text", color, depth, defaultDepth),
-    caret: depth => getClass("caret", color, depth, defaultDepth)
+    bg: (depth) => getClass("bg", color, depth, defaultDepth),
+    border: (depth) => getClass("border", color, depth, defaultDepth),
+    txt: (depth) => getClass("text", color, depth, defaultDepth),
+    caret: (depth) => getClass("caret", color, depth, defaultDepth),
   };
 }
 
@@ -42,7 +42,7 @@ export class ClassBuilder {
     if (cond && classes) {
       this.classes = Object.keys(classes).reduce(
         (acc, from) => acc.replace(new RegExp(from, "g"), classes[from]),
-        this.classes
+        this.classes,
       );
     }
 
@@ -55,7 +55,7 @@ export class ClassBuilder {
         .split(" ")
         .reduce(
           (acc, cur) => acc.replace(new RegExp(cur, "g"), ""),
-          this.classes
+          this.classes,
         );
     }
 
@@ -87,6 +87,6 @@ export function filterProps(reserved, props) {
       cur.includes("$$") || cur.includes("Class") || reserved.includes(cur)
         ? acc
         : { ...acc, [cur]: props[cur] },
-    {}
+    {},
   );
 }

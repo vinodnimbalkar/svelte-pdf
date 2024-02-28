@@ -2,6 +2,7 @@
   // @ts-nocheck
 
   import * as pdfjs from 'pdfjs-dist'
+  import * as pdfWorker from 'pdfjs-dist/build/pdf.worker.mjs'
   import { onDestroy, tick } from 'svelte'
   import { calcRT, getPageText, onPrint, savePDF } from './utils/Helper.svelte'
   import Tooltip from './utils/Tooltip.svelte'
@@ -25,10 +26,7 @@
   export let totalPage = 0
   export let downloadFileName = ''
 
-  pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-    'pdfjs-dist/build/pdf.worker.js',
-    import.meta.url
-  )
+  pdfjs.GlobalWorkerOptions.workerSrc = pdfWorker
 
   let canvas
   let page_num = 0

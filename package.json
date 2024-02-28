@@ -1,48 +1,7 @@
 {
-  "name": "svelte-pdf",
-  "version": "1.0.20",
+  "name": "@defenseunicorns/svelte-pdf",
+  "version": "1.0.0",
   "description": "svelte-pdf provides a component for rendering PDF documents using PDF.js",
-  "main": "index.js",
-  "type": "module",
-  "scripts": {
-    "dev": "vite dev",
-    "build": "vite build",
-    "package": "svelte-kit package",
-    "preview": "vite preview",
-    "check": "svelte-check --tsconfig ./jsconfig.json",
-    "check:watch": "svelte-check --tsconfig ./jsconfig.json --watch",
-    "lint": "prettier --check --plugin-search-dir=. . && eslint .",
-    "format": "prettier --write --plugin-search-dir=. ."
-  },
-  "devDependencies": {
-    "@sveltejs/adapter-auto": "next",
-    "@sveltejs/kit": "next",
-    "eslint": "^8.28.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-svelte3": "^4.0.0",
-    "prettier": "^2.8.0",
-    "prettier-plugin-svelte": "^2.8.1",
-    "svelte": "^3.53.1",
-    "svelte-check": "^2.9.2",
-    "svelte2tsx": "^0.5.20",
-    "typescript": "^4.9.3",
-    "vite": "^3.2.4"
-  },
-  "dependencies": {
-    "pdfjs-dist": "^3.8.162"
-  },
-  "exports": {
-    ".": "./index.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/vinodnimbalkar/svelte-pdf.git"
-  },
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/vinodnimbalkar/svelte-pdf/issues"
-  },
-  "homepage": "https://github.com/vinodnimbalkar/svelte-pdf#readme",
   "keywords": [
     "pdf",
     "svelte-pdf",
@@ -51,5 +10,48 @@
     "pdf-zoom",
     "pdf-rotation",
     "pdf-navigation"
-  ]
+  ],
+  "homepage": "https://github.com/defenseunicorns/svelte-pdf#readme",
+  "bugs": {
+    "url": "https://github.com/defenseunicorns/svelte-pdf/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/defenseunicorns/svelte-pdf.git"
+  },
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "svelte": "./dist/index.js"
+    }
+  },
+  "main": "index.js",
+  "scripts": {
+    "build": "vite build",
+    "check": "svelte-check --tsconfig ./jsconfig.json",
+    "check:watch": "svelte-check --tsconfig ./jsconfig.json --watch",
+    "dev": "vite dev",
+    "format": "prettier --write --plugin-search-dir=. .",
+    "lint": "prettier --check --plugin-search-dir=. . && eslint .",
+    "package": "svelte-kit package && cd package && npm publish",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "pdfjs-dist": "^4.0.379"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-auto": "3.1.1",
+    "@sveltejs/kit": "2.5.2",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-svelte": "^2.35.1",
+    "prettier": "^3.2.5",
+    "prettier-plugin-svelte": "^3.2.2",
+    "svelte": "^4.2.12",
+    "svelte-check": "^3.6.5",
+    "svelte2tsx": "^0.7.2",
+    "typescript": "^5.3.3",
+    "vite": "^5.1.4"
+  }
 }

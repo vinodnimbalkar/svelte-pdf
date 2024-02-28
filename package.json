@@ -1,5 +1,5 @@
 {
-  "name": "@defenseunicorns/svelte-pdf",
+  "name": "svelte-pdf",
   "version": "1.0.0",
   "description": "svelte-pdf provides a component for rendering PDF documents using PDF.js",
   "keywords": [

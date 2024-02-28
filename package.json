@@ -1,5 +1,5 @@
 {
-  "name": "@defenseunicorns/svelte-pdf",
+  "name": "svelte-pdf",
   "version": "1.0.0",
   "description": "svelte-pdf provides a component for rendering PDF documents using PDF.js",
   "keywords": [
@@ -11,13 +11,13 @@
     "pdf-rotation",
     "pdf-navigation"
   ],
-  "homepage": "https://github.com/defenseunicorns/svelte-pdf#readme",
+  "homepage": "https://github.com/vinodnimbalkar/svelte-pdf#readme",
   "bugs": {
-    "url": "https://github.com/defenseunicorns/svelte-pdf/issues"
+    "url": "https://github.com/vinodnimbalkar/svelte-pdf/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/defenseunicorns/svelte-pdf.git"
+    "url": "git+https://github.com/vinodnimbalkar/svelte-pdf.git"
   },
   "license": "MIT",
   "type": "module",
@@ -34,7 +34,6 @@
     "dev": "vite dev",
     "format": "prettier --write --plugin-search-dir=. .",
     "lint": "prettier --check --plugin-search-dir=. . && eslint .",
-    "package": "svelte-kit package && cd package && npm publish",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -218,7 +218,7 @@
 </script>
 
 <svelte:window bind:innerWidth={pageWidth} bind:innerHeight={pageHeight} />
-<div class="parent">
+<div class="parent" data-theme="dark">
   <div class={showBorder === true ? 'control' : 'null'}>
     {#if passwordError === true}
       <div class="password-viewer">
@@ -459,6 +459,39 @@
 </div>
 
 <style>
+  div.parent[data-theme='dark'] {
+    --border-color: rgba(0, 0, 0, 0.2);
+    --pw-color: red;
+    --pw-btn-color: rgb(53, 126, 221);
+    --pw-txt-color: rgb(255, 255, 255);
+    --box-shadow-top: rgba(0, 0, 0, 0.1);
+    --box-shadow-bottom: rgba(0, 0, 0, 0.05);
+    --control-background-color: black;
+    --line-border-color: #36ebff;
+    --viewer-border-color: black;
+    --icon-color: #36ebff;
+    --topBtn-border-color: black;
+    --topBtn-color: black;
+    --topBtn-background-color: black;
+    color: white;
+  }
+
+  div.parent[data-theme='light'] {
+    --border-color: rgba(0, 0, 0, 0.2);
+    --pw-color: red;
+    --pw-btn-color: rgb(53, 126, 221);
+    --pw-txt-color: rgb(255, 255, 255);
+    --box-shadow-top: rgba(0, 0, 0, 0.1);
+    --box-shadow-bottom: rgba(0, 0, 0, 0.05);
+    --control-background-color: white;
+    --line-border-color: #4fd1c5;
+    --viewer-border-color: black;
+    --icon-color: #38b2ac;
+    --topBtn-border-color: black;
+    --topBtn-color: white;
+    --topBtn-background-color: white;
+  }
+
   :global(html) {
     scroll-behavior: smooth;
   }
@@ -471,7 +504,7 @@
 
   .password-viewer {
     border-width: 1px;
-    border-color: #000;
+    border-color: var(--border-color);
     border-style: solid;
     align-items: center;
     display: flex;
@@ -482,7 +515,7 @@
   }
 
   .password-message {
-    color: red;
+    color: var(--pw-color);
     margin: 8px 0px;
   }
 
@@ -494,31 +527,31 @@
   }
 
   .password-input {
-    border: 1px solid rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color);
     padding: 8px;
     width: 200px;
   }
 
   .password-button {
-    background-color: rgb(53, 126, 221);
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    color: rgb(255, 255, 255);
+    background-color: var(--pw-btn-color);
+    border: 1px solid var(--border-color);
+    color: var(--pw-txt-color);
     border-left-color: transparent;
     cursor: pointer;
     padding: 8px 16px;
   }
 
   .control {
-    margin-top: 1.25rem;
+    margin-top: 0.25rem;
     margin-bottom: 0;
     margin-right: 2.5rem;
     margin-left: 2.5rem;
     border-radius: 0.25rem;
     overflow: auto;
     box-shadow:
-      0 10px 15px -3px rgba(0, 0, 0, 0.1),
-      0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    background-color: #fff;
+      0 10px 15px -3px var(--box-shadow-top),
+      0 4px 6px -2px var(--box-shadow-bottom);
+    background-color: var(--control-background-color);
     border-width: 1px;
   }
 
@@ -534,24 +567,24 @@
     border-right-width: 0px;
     border-bottom-width: 1px;
     border-left-width: 0px;
-    border-color: #4fd1c5;
+    border-color: var(--line-border-color);
     border-style: dotted;
-    margin-bottom: 0.75rem;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+    margin-bottom: 0.1;
+    padding-top: 0.1rem;
+    padding-bottom: 0.1rem;
     justify-content: center;
   }
 
   .button-control {
     display: flex;
     flex-direction: row;
-    padding: 0.5rem;
-    margin: 0.75rem;
+    padding: 0.3rem;
+    margin: 0.7rem;
     border-radius: 0.25rem;
     overflow: hidden;
     box-shadow:
-      0 10px 15px -3px rgba(0, 0, 0, 0.1),
-      0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      0 10px 15px -3px var(--box-shadow-top),
+      0 4px 6px -2px var(--box-shadow-bottom);
     border-left-width: 1px;
     border-bottom-width: 1px;
     border-right-width: 1px;
@@ -560,7 +593,7 @@
 
   .viewer {
     border-width: 1px;
-    border-color: #000;
+    border-color: var(--viewer-border-color);
     border-style: solid;
   }
 
@@ -568,7 +601,7 @@
     height: 1.25rem;
     width: 1.25rem;
     fill: currentColor;
-    color: #38b2ac;
+    color: var(--icon-color);
   }
 
   .disabled {
@@ -601,18 +634,18 @@
     left: 90%;
     max-width: 30px;
     width: 100%;
-    border-color: #000;
-    background-color: #fff;
+    border-color: var(--topBtn-border-color);
+    background-color: var(--topBtn-background-color);
     padding: 0.5px;
     border-radius: 9999px;
   }
 
   #topBtn:hover {
-    background-color: #000;
-    color: #fff;
+    background-color: var(--topBtn-background-color);
+    color: var(--topBtn-color);
   }
 
-  /* 
+  /*
   ##Device = Tablets, Ipads (portrait)
   ##Screen = B/w 768px to 1024px
   */
@@ -635,19 +668,7 @@
     }
 
     .button-control {
-      display: flex;
-      flex-direction: row;
-      padding: 0.5rem;
       margin: 0.5rem;
-      border-radius: 0.25rem;
-      overflow: hidden;
-      box-shadow:
-        0 10px 15px -3px rgba(0, 0, 0, 0.1),
-        0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      border-left-width: 1px;
-      border-bottom-width: 1px;
-      border-right-width: 1px;
-      cursor: pointer;
     }
 
     .page-info {
@@ -660,7 +681,7 @@
     }
   }
 
-  /* 
+  /*
   ##Device = Low Resolution Tablets, Mobiles (Landscape)
   ##Screen = B/w 481px to 767px
   */
@@ -683,19 +704,7 @@
     }
 
     .button-control {
-      display: flex;
-      flex-direction: row;
-      padding: 0.5rem;
       margin: 0.5rem;
-      border-radius: 0.25rem;
-      overflow: hidden;
-      box-shadow:
-        0 10px 15px -3px rgba(0, 0, 0, 0.1),
-        0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      border-left-width: 1px;
-      border-bottom-width: 1px;
-      border-right-width: 1px;
-      cursor: pointer;
     }
 
     .page-info {
@@ -708,7 +717,7 @@
     }
   }
 
-  /* 
+  /*
   ##Device = Most of the Smartphones Mobiles (Portrait)
   ##Screen = B/w 320px to 479px
   */
@@ -731,19 +740,8 @@
     }
 
     .button-control {
-      display: flex;
-      flex-direction: row;
       padding: 0.4rem;
       margin: 0.4rem;
-      border-radius: 0.25rem;
-      overflow: hidden;
-      box-shadow:
-        0 10px 15px -3px rgba(0, 0, 0, 0.1),
-        0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      border-left-width: 1px;
-      border-bottom-width: 1px;
-      border-right-width: 1px;
-      cursor: pointer;
     }
 
     .page-info {

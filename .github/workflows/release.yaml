@@ -2,8 +2,7 @@ name: Release
 
 on:
   workflow_run:
-    workflows:
-      - 'Build and Test'
+    workflows: ['Build and Test']
     branches:
       - master
     types:

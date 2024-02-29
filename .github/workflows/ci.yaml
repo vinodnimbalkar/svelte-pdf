@@ -19,21 +19,10 @@ jobs:
         with:
           node-version: '20'
 
-      # - name: Clean npm cache
-      #   run: npm cache clean --force
-
-      # - name: Remove node_modules
-      #   run: rm -rf node_modules
-
-      # - name: Cache modules
-      #   uses: actions/cache@v2
-      #   with:
-      #     # This path is specific to npm
-      #     path: ~/.npm
-      #     # Use a key for caching dependencies
-      #     key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-node-
+      - name: Clear previous
+        run: |
+          rm -rf node_modules
+          rm -f package-lock.json
 
       - name: Install dependencies
         run: npm i

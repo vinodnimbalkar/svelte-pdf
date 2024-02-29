@@ -19,10 +19,10 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Clear previous
-        run: |
-          rm -rf node_modules
-          rm -f package-lock.json
+      # - name: Clear previous
+      #   run: |
+      #     rm -rf node_modules
+      #     rm -f package-lock.json
 
       - name: Install dependencies
         run: npm i

@@ -30,8 +30,7 @@
   "main": "index.js",
   "svelte": "./dist/index.js",
   "files": [
-    "dist",
-    "dist/styles.css"
+    "dist"
   ],
   "scripts": {
     "build": "vite build",

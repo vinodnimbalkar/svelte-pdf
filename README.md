@@ -63,16 +63,16 @@ npm install svelte-pdf
 
 ## Props
 
-| prop name     | type      | default | Required |
-| ------------- | --------- | ------- | -------- |
-| `url`         | `string`  | `N/A`   | `Yes`    |
-| `data`        | `string`  | `N/A`   | `No`     |
-| `scale`       | `float`   | `1.8`   | `No`     |
-| `pageNum`     | `number`  | `1`     | `No`     |
-| `flipTime`    | `number`  | `120`   | `No`     |
-| `showButtons` | `array`   | `["navigation", "zoom", "print", "rotate", "download", "autoflip", "timeInfo", "pageInfo"]`  | `No`     |
-| `showBorder`  | `boolean` | `true`  | `No`     |
-| `downloadFileName` | `string` | `N/A` | `No`   |
+| prop name          | type      | default                                                                                     | Required |
+| ------------------ | --------- | ------------------------------------------------------------------------------------------- | -------- |
+| `url`              | `string`  | `N/A`                                                                                       | `Yes`    |
+| `data`             | `string`  | `N/A`                                                                                       | `No`     |
+| `scale`            | `float`   | `1.8`                                                                                       | `No`     |
+| `pageNum`          | `number`  | `1`                                                                                         | `No`     |
+| `flipTime`         | `number`  | `120`                                                                                       | `No`     |
+| `showButtons`      | `array`   | `["navigation", "zoom", "print", "rotate", "download", "autoflip", "timeInfo", "pageInfo"]` | `No`     |
+| `showBorder`       | `boolean` | `true`                                                                                      | `No`     |
+| `downloadFileName` | `string`  | `N/A`                                                                                       | `No`     |
 
 ## Examples
 
@@ -91,7 +91,9 @@ Then run the **http://localhost:5000**:
 
 ### 1. Install it as part of `devDependencies`
 
-> When using Svelte components installed from npm, it needs the original component source (rather than any precompiled JavaScript that ships with the component). This allows the component to be rendered server-side, and also keeps your client-side app smaller...
+> When using Svelte components installed from npm, it needs the original component source (rather than any precompiled
+> JavaScript that ships with the component). This allows the component to be rendered server-side, and also keeps your
+> client-side app smaller...
 
       -- [Rich Harris](https://github.com/Rich-Harris/svelte-workshop#using-external-components)
 
@@ -105,7 +107,9 @@ npm install -D svelte-pdf
 
 ### 2. Make our `PdfViewer` component SSR compatible
 
-Since out `PdfViewer` component has a dependency on `window` object, we have to use dynamic import, from within the `onMount` function (which is only called on the client), so that our import code is never called on the server. [Refer to the official doc here...](https://sapper.svelte.dev/docs#Making_a_component_SSR_compatible)
+Since out `PdfViewer` component has a dependency on `window` object, we have to use dynamic import, from within the
+`onMount` function (which is only called on the client), so that our import code is never called on the server.
+[Refer to the official doc here...](https://sapper.svelte.dev/docs#Making_a_component_SSR_compatible)
 
 ```bash
 

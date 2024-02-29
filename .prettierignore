@@ -10,3 +10,4 @@ userguide/
 .release-please-manifest.json
 CHANGELOG.md
 .vscode/
+.github/

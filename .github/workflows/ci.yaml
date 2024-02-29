@@ -19,11 +19,11 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Clean npm cache
-        run: npm cache clean --force
+      # - name: Clean npm cache
+      #   run: npm cache clean --force
 
-      - name: Remove node_modules
-        run: rm -rf node_modules
+      # - name: Remove node_modules
+      #   run: rm -rf node_modules
 
       # - name: Cache modules
       #   uses: actions/cache@v2

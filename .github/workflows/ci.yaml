@@ -2,6 +2,7 @@ name: Build and Test
 
 on:
   push:
+    branches: [ '**' ]
   pull_request:
     branches:
       - master
@@ -16,7 +17,25 @@ jobs:
       - name: Run Tests
         uses: actions/setup-node@v3
         with:
-          node-version: 'lts/Hydrogen'
+          node-version: '20'
           cache: 'npm'
-      - run: npm ci
-      - run: npm test
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run format
+        run: npm run format
+
+      - name: Commit and push if changes
+        run: |
+          # Extract author info from the last commit
+          AUTHOR_NAME=$(git log -1 --pretty=format:'%an')
+          AUTHOR_EMAIL=$(git log -1 --pretty=format:'%ae')
+          echo "Committing as $AUTHOR_NAME <$AUTHOR_EMAIL>"
+          git config --global user.name "$AUTHOR_NAME"
+          git config --global user.email "$AUTHOR_EMAIL"
+          git add -A
+          git diff --staged --quiet || (git commit -m "Format code" && git push)
+
+      - name: Run tests
+        run: npm test

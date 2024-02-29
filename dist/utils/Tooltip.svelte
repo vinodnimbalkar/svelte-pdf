@@ -63,11 +63,7 @@
   </div>
 
   {#if show}
-    <div
-      in:scale={{ duration: 150 }}
-      out:scale={{ duration: 150, delay: 100 }}
-      class={c}
-    >
+    <div in:scale={{ duration: 150 }} out:scale={{ duration: 150, delay: 100 }} class={c}>
       <slot />
     </div>
   {/if}

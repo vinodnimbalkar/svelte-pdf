@@ -523,6 +523,5 @@
   </button>
 </div>
 
-<style>
-  @import './styles.css';
-</style>
+<style>@import "./styles.css";</style>
+

@@ -9,7 +9,8 @@
 
   export let url
   export let data
-  export let scale = 1.8
+  export let scale = 1.5
+  export let mode = 'dark'
   export let pageNum = 1 //must be number
   export let flipTime = 120 //by default 2 minute, value in seconds
   export let showButtons = ['navigation', 'zoom', 'print', 'rotate', 'download', 'autoflip', 'timeInfo', 'pageInfo'] //array
@@ -218,7 +219,7 @@
 </script>
 
 <svelte:window bind:innerWidth={pageWidth} bind:innerHeight={pageHeight} />
-<div class="parent" data-theme="dark">
+<div class="parent" data-theme={mode === 'dark' ? 'dark' : 'light'}>
   <div class={showBorder === true ? 'control' : 'null'}>
     {#if passwordError === true}
       <div class="password-viewer">
@@ -466,13 +467,13 @@
     --pw-txt-color: rgb(255, 255, 255);
     --box-shadow-top: rgba(0, 0, 0, 0.1);
     --box-shadow-bottom: rgba(0, 0, 0, 0.05);
-    --control-background-color: black;
+    --control-background-color: #1a1c29;
     --line-border-color: #36ebff;
-    --viewer-border-color: black;
+    --viewer-border-color: #1a1c29;
     --icon-color: #36ebff;
-    --topBtn-border-color: black;
-    --topBtn-color: black;
-    --topBtn-background-color: black;
+    --topBtn-border-color: #1a1c29;
+    --topBtn-color: #1a1c29;
+    --topBtn-background-color: #1a1c29;
     color: white;
   }
 

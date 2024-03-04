@@ -49,7 +49,7 @@
   }
 </script>
 
-<div class="activator">
+<div class="icon-button">
   <div
     role="note"
     on:mouseenter={debounce(showTooltip, 100)}
@@ -59,7 +59,7 @@
     on:focus
     on:blur
   >
-    <slot name="activator" />
+    <slot name="icon-button" />
   </div>
 
   {#if show}
@@ -76,7 +76,7 @@
     white-space: nowrap;
     font-size: 0.75rem;
     position: absolute;
-    margin-top: 0.5rem;
+    /* margin-top: 0.5rem; */
     background-color: #718096;
     color: #fff;
     border-radius: 0.25rem;
@@ -86,7 +86,7 @@
     padding-left: 0.75rem;
     z-index: 30;
   }
-  .activator {
+  .icon-button {
     position: relative;
     display: inline-block;
   }

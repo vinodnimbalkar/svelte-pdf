@@ -43,9 +43,12 @@
     "package": "svelte-kit package",
     "prepare": "husky",
     "preview": "vite preview",
+    "start": "npm run dev",
     "test": "echo 'Add tests'"
   },
   "dependencies": {
+    "@fontsource-variable/montserrat": "5.0.17",
+    "@fontsource/montserrat": "5.0.16",
     "pdfjs-dist": "4.0.379"
   },
   "devDependencies": {

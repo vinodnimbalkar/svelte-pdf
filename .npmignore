@@ -1,5 +1,5 @@
 /node_modules/
-/public/build/
 /example
+dist/
 
 .DS_Store

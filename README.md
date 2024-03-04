@@ -63,16 +63,17 @@ npm install svelte-pdf
 
 ## Props
 
-| prop name          | type      | default                                                                                     | Required |
-| ------------------ | --------- | ------------------------------------------------------------------------------------------- | -------- |
-| `url`              | `string`  | `N/A`                                                                                       | `Yes`    |
-| `data`             | `string`  | `N/A`                                                                                       | `No`     |
-| `scale`            | `float`   | `1.5`                                                                                       | `No`     |
-| `pageNum`          | `number`  | `1`                                                                                         | `No`     |
-| `flipTime`         | `number`  | `120`                                                                                       | `No`     |
-| `showButtons`      | `array`   | `["navigation", "zoom", "print", "rotate", "download", "autoflip", "timeInfo", "pageInfo"]` | `No`     |
-| `showBorder`       | `boolean` | `true`                                                                                      | `No`     |
-| `downloadFileName` | `string`  | `N/A`                                                                                       | `No`     |
+| Prop               |   Type    | Default                                                                                       |  Req  |
+| ------------------ | :-------: | --------------------------------------------------------------------------------------------- | :---: |
+| `url`              | `string`  | `N/A`                                                                                         | `Yes` |
+| `data`             | `string`  | `N/A`                                                                                         | `No`  |
+| `mode`             | `string`  | `"dark"`                                                                                      | `No`  |
+| `scale`            |  `float`  | `1.5`                                                                                         | `No`  |
+| `pageNum`          | `number`  | `1`                                                                                           | `No`  |
+| `flipTime`         | `number`  | `120`                                                                                         | `No`  |
+| `showButtons`      |  `array`  | `"['navigation', 'zoom', 'print', 'rotate', 'download', 'autoflip', 'timeInfo', 'pageInfo']"` | `No`  |
+| `showBorder`       | `boolean` | `true`                                                                                        | `No`  |
+| `downloadFileName` | `string`  | `N/A`                                                                                         | `No`  |
 
 ## Examples
 

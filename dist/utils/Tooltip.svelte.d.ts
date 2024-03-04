@@ -14,7 +14,7 @@ export default class Tooltip extends SvelteComponent<{
 } & {
     [evt: string]: CustomEvent<any>;
 }, {
-    activator: {};
+    'icon-button': {};
     default: {};
 }> {
 }
@@ -38,7 +38,7 @@ declare const __propDef: {
         [evt: string]: CustomEvent<any>;
     };
     slots: {
-        activator: {};
+        'icon-button': {};
         default: {};
     };
 };

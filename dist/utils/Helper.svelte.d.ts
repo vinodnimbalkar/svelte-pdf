@@ -1,7 +1,7 @@
 export function onPrint(url: string): void;
 export function calcRT(paraBody: string): number | undefined;
 export function getPageText(pageNum: Integer, PDFDocumentInstance: PDFDocument): Promise<any>;
-export function savePDF({ fileUrl, data, name }: string): Promise<void>;
+export function savePDF(fileUrl: string, data: string, name?: string): Promise<void>;
 /** @typedef {typeof __propDef.props}  HelperProps */
 /** @typedef {typeof __propDef.events}  HelperEvents */
 /** @typedef {typeof __propDef.slots}  HelperSlots */

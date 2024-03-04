@@ -49,6 +49,7 @@
   "dependencies": {
     "@fontsource-variable/montserrat": "5.0.17",
     "@fontsource/montserrat": "5.0.16",
+    "material-icons": "^1.13.12",
     "pdfjs-dist": "4.0.379"
   },
   "devDependencies": {

@@ -5,6 +5,7 @@ export default class PdfViewer extends SvelteComponent<{
     data: any;
     url: any;
     scale?: number | undefined;
+    mode?: string | undefined;
     pageNum?: number | undefined;
     flipTime?: number | undefined;
     showButtons?: string[] | undefined;
@@ -26,6 +27,7 @@ declare const __propDef: {
         data: any;
         url: any;
         scale?: number | undefined;
+        mode?: string | undefined;
         pageNum?: number | undefined;
         flipTime?: number | undefined;
         showButtons?: string[] | undefined;

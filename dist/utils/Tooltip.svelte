@@ -49,7 +49,7 @@
   }
 </script>
 
-<div class="activator">
+<div class="icon-button">
   <div
     role="note"
     on:mouseenter={debounce(showTooltip, 100)}
@@ -59,7 +59,7 @@
     on:focus
     on:blur
   >
-    <slot name="activator" />
+    <slot name="icon-button" />
   </div>
 
   {#if show}
@@ -69,4 +69,4 @@
   {/if}
 </div>
 
-<style>.tooltip{background-color:#718096;border-radius:.25rem;color:#fff;font-size:.75rem;left:50%;margin-top:.5rem;padding:1rem .75rem;position:absolute;transform:translateX(-50%);white-space:nowrap;z-index:30}.activator{display:inline-block;position:relative}</style>
+<style>.tooltip{background-color:#718096;border-radius:.25rem;color:#fff;font-size:.75rem;left:50%;padding:.1rem .75rem;position:absolute;transform:translateX(-50%);white-space:nowrap}.icon-button{background-color:var(--background-color);color:var(--icon-color);display:inline-block;padding:.1rem .5rem;position:relative}</style>

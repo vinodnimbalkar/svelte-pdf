@@ -233,23 +233,18 @@
       </div>
     {:else if showButtons.length}
       <div class="control-start">
-        <div class="line">
+        <div class="menu_bar">
           {#if showButtons.includes('navigation')}
             <Tooltip>
               <span
                 role="button"
                 tabindex="0"
                 slot="icon-button"
-                class="button-control {pageNum <= 1 ? 'disabled' : null}"
+                class="material-icons-outlined button-control {pageNum <= 1 ? 'disabled' : null}"
                 on:click={() => onPrevPage()}
                 on:keydown
               >
-                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                  <polygon
-                    points="3.828 9 9.899 2.929 8.485 1.515 0 10 .707 10.707 8.485
-                  18.485 9.899 17.071 3.828 11 20 11 20 9 3.828 9"
-                  />
-                </svg>
+                arrow_back
               </span>
               Previous
             </Tooltip>
@@ -258,16 +253,11 @@
                 role="button"
                 tabindex="0"
                 slot="icon-button"
-                class="button-control {pageNum >= totalPage ? 'disabled' : null}"
+                class="material-icons-outlined button-control {pageNum >= totalPage ? 'disabled' : null}"
                 on:click={() => onNextPage()}
                 on:keydown
               >
-                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                  <polygon
-                    points="16.172 9 10.101 2.929 11.515 1.515 20 10 19.293 10.707
-                  11.515 18.485 10.101 17.071 16.172 11 0 11 0 9"
-                  />
-                </svg>
+                arrow_forward
               </span>
               Next
             </Tooltip>
@@ -278,18 +268,11 @@
                 role="button"
                 tabindex="0"
                 slot="icon-button"
-                class="button-control {scale >= maxScale ? 'disabled' : null}"
+                class="material-icons-outlined button-control {scale >= maxScale ? 'disabled' : null}"
                 on:click={() => onZoomIn()}
                 on:keydown
               >
-                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                  <path
-                    fill-rule="evenodd"
-                    d="M12.9 14.32a8 8 0 1 1 1.41-1.41l5.35 5.33-1.42
-                  1.42-5.33-5.34zM8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12zM7
-                  7V5h2v2h2v2H9v2H7V9H5V7h2z"
-                  />
-                </svg>
+                zoom_in
               </span>
               Zoom In
             </Tooltip>
@@ -298,18 +281,11 @@
                 role="button"
                 tabindex="0"
                 slot="icon-button"
-                class="button-control {scale <= minScale ? 'disabled' : null}"
+                class="material-icons-outlined button-control {scale <= minScale ? 'disabled' : null}"
                 on:click={() => onZoomOut()}
                 on:keydown
               >
-                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                  <path
-                    fill-rule="evenodd"
-                    d="M12.9 14.32a8 8 0 1 1 1.41-1.41l5.35 5.33-1.42
-                  1.42-5.33-5.34zM8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12zM5
-                  7h6v2H5V7z"
-                  />
-                </svg>
+                zoom_out
               </span>
               Zoom Out
             </Tooltip>
@@ -320,18 +296,13 @@
                 role="button"
                 tabindex="0"
                 slot="icon-button"
-                class="button-control"
+                class="material-icons-outlined button-control"
                 on:click={() => {
                   printPdf(url)
                 }}
                 on:keydown
               >
-                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                  <path
-                    d="M4 16H0V6h20v10h-4v4H4v-4zm2-4v6h8v-6H6zM4 0h12v5H4V0zM2
-                  8v2h2V8H2zm4 0v2h2V8H6z"
-                  />
-                </svg>
+                print
               </span>
               Print
             </Tooltip>
@@ -342,36 +313,26 @@
                 role="button"
                 tabindex="0"
                 slot="icon-button"
-                class="button-control"
+                class="material-icons-outlined button-control"
                 on:click={() => antiClockwiseRotate()}
                 on:keydown
               >
-                <svg class="icon rot-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                  <path
-                    d="M14.66 15.66A8 8 0 1 1 17 10h-2a6 6 0 1 0-1.76 4.24l1.42
-                  1.42zM12 10h8l-4 4-4-4z"
-                  />
-                </svg>
+                rotate_left
               </span>
-              Anti-Clockwise
+              Rotate Left
             </Tooltip>
             <Tooltip>
               <span
                 role="button"
                 tabindex="0"
                 slot="icon-button"
-                class="button-control"
+                class="material-icons-outlined button-control"
                 on:click={() => clockwiseRotate()}
                 on:keydown
               >
-                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                  <path
-                    d="M14.66 15.66A8 8 0 1 1 17 10h-2a6 6 0 1 0-1.76 4.24l1.42
-                  1.42zM12 10h8l-4 4-4-4z"
-                  />
-                </svg>
+                rotate_right
               </span>
-              Clockwise
+              Rotate Right
             </Tooltip>
           {/if}
           {#if showButtons.includes('download')}
@@ -380,13 +341,11 @@
                 role="button"
                 tabindex="0"
                 slot="icon-button"
-                class="button-control"
+                class="material-icons-outlined button-control"
                 on:click={() => downloadPdf(url, data)}
                 on:keydown
               >
-                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                  <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
-                </svg>
+                download
               </span>
               Download
             </Tooltip>
@@ -397,44 +356,26 @@
                 role="button"
                 tabindex="0"
                 slot="icon-button"
-                class="page-info button-control"
+                class="material-icons-outlined page-info button-control"
                 on:click={() => onPageTurn()}
                 on:keydown
               >
-                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                  {#if autoFlip === true}
-                    <path d="M4 18h12V6h-4V2H4v16zm-2 1V0h12l4 4v16H2v-1z" />
-                  {:else}
-                    <path
-                      d="M9.896,3.838L0.792,1.562v14.794l9.104,2.276L19,16.356V1.562L9.896,3.838z
-                    M9.327,17.332L1.93,15.219V3.27 l7.397,1.585V17.332z
-                    M17.862,15.219l-7.397,2.113V4.855l7.397-1.585V15.219z"
-                    />
-                  {/if}
-                </svg>
+                {#if autoFlip === true}
+                  description
+                {:else}
+                  auto_stories
+                {/if}
               </span>
-              {autoFlip === true ? seconds : 'Auto Turn Page'}
+              {autoFlip === true ? `Next Page: ${seconds}` : 'Auto Turn Page'}
             </Tooltip>
           {/if}
           <span class="page-info" style={showButtons.includes('timeInfo') ? '' : 'display: none;'}>
-            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-              <path
-                d="M16.32 7.1A8 8 0 1 1 9 4.06V2h2v2.06c1.46.18 2.8.76 3.9
-                1.62l1.46-1.46 1.42 1.42-1.46 1.45zM10 18a6 6 0 1 0 0-12 6 6 0 0
-                0 0 12zM7 0h6v2H7V0zm5.12 8.46l1.42 1.42L10 13.4 8.59
-                12l3.53-3.54z"
-              />
-            </svg>
+            <span class="material-icons-outlined">schedule</span>
+
             <span class="text">{readingTime} min read</span>
           </span>
           <span class="page-info" style={showButtons.includes('pageInfo') ? '' : 'display: none;'}>
-            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-              <path
-                d="M16 2h4v15a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3V0h16v2zm0 2v13a1 1 0
-                0 0 1 1 1 1 0 0 0 1-1V4h-2zM2 2v15a1 1 0 0 0 1 1h11.17a2.98 2.98
-                0 0 1-.17-1V2H2zm2 8h8v2H4v-2zm0 4h8v2H4v-2zM4 4h8v4H4V4z"
-              />
-            </svg>
+            <span class="material-icons-outlined"> pages </span>
             <div class="text">
               Page :
               <span bind:this={page_num} />
@@ -456,12 +397,269 @@
     {/if}
   </div>
   <button id="topBtn" on:click={() => window.scrollTo(0, 0)}>
-    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-      <path d="M7 10v8h6v-8h5l-8-8-8 8h5z" />
-    </svg>
+    <span class="material-icons-outlined"> arrow_upward </span>
   </button>
 </div>
 
 <style>
-  @import './styles.css';
+  @import 'material-icons/iconfont/outlined.css';
+
+  :root {
+    --pw-color: red;
+    --pw-btn-color: rgb(53, 126, 221);
+    --pw-txt-color: rgb(255, 255, 255);
+    --icon-color: #38b2ac;
+  }
+
+  div.parent[data-theme='dark'] {
+    --border-color: hsl(240, 3%, 94%);
+    --control-background-color: #1a1c29;
+    --background-color: #121212;
+    --line-border-color: #36ebff;
+    --viewer-border-color: #1a1c29;
+  }
+
+  div.parent[data-theme='light'] {
+    --border-color: rgba(0, 0, 0, 0.2);
+    --control-background-color: white;
+    --line-border-color: #4fd1c5;
+    --viewer-border-color: black;
+  }
+
+  :global(html) {
+    scroll-behavior: smooth;
+  }
+
+  .parent {
+    display: flex;
+    flex-direction: column;
+    margin: 0 1.25rem;
+  }
+
+  .password-viewer {
+    border-width: 1px;
+    border-color: var(--border-color);
+    border-style: solid;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    widows: 100%;
+  }
+
+  .password-message {
+    color: var(--pw-color);
+    margin: 8px 0px;
+  }
+
+  .password-container {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin: 8px 0px;
+  }
+
+  .password-input {
+    border: 1px solid var(--border-color);
+    padding: 8px;
+    width: 200px;
+  }
+
+  .password-button {
+    background-color: var(--pw-btn-color);
+    border: 1px solid var(--border-color);
+    color: var(--pw-txt-color);
+    border-left-color: transparent;
+    cursor: pointer;
+    padding: 8px 16px;
+  }
+
+  .control {
+    margin-top: 0.25rem;
+    margin-bottom: 0;
+    margin-right: 2.5rem;
+    margin-left: 2.5rem;
+    border-radius: 0.25rem;
+    overflow: auto;
+    background-color: var(--control-background-color);
+    border-width: 1px;
+  }
+
+  .control-start {
+    padding: 1.25rem;
+  }
+
+  .menu_bar {
+    display: flex;
+    flex-direction: row;
+    font-family: 'montserrat', sans-serif;
+    border-top-width: 0px;
+    border-right-width: 0px;
+    border-bottom-width: 1px;
+    border-left-width: 0px;
+    border-color: var(--line-border-color);
+    border-style: solid;
+    margin-bottom: 0.1rem;
+    padding-top: 0.1rem;
+    padding-bottom: 0.1rem;
+    justify-content: center;
+  }
+
+  .button-control {
+    display: flex;
+    flex-direction: row;
+    padding: 0.3rem;
+    margin: 0.7rem;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .button-control:hover {
+    transform: scale(1.5);
+  }
+
+  .viewer {
+    border-width: 1px;
+    border-color: var(--viewer-border-color);
+    border-style: solid;
+  }
+
+  .disabled {
+    cursor: not-allowed;
+    color: lightgray;
+  }
+
+  .disabled:hover {
+    transform: scale(1);
+  }
+
+  .page-info {
+    display: flex;
+    flex-direction: row;
+    padding-top: 0.5rem;
+    margin: 0.75rem;
+    overflow: hidden;
+    color: var(--icon-color);
+  }
+
+  .text {
+    margin-left: 0.5rem;
+    cursor: default;
+  }
+
+  #topBtn {
+    position: fixed;
+    bottom: 10px;
+    float: right;
+    right: 10%;
+    left: 90%;
+    max-width: 30px;
+    width: 200%;
+    font-size: 2em;
+    color: var(--icon-color);
+    background-color: var(--background-color);
+    padding: 0.5px;
+  }
+
+  #topBtn:hover {
+    transform: scale(1.5);
+  }
+
+  /*
+  ##Device = Tablets, Ipads (portrait)
+  ##Screen = B/w 768px to 1024px
+  */
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .parent {
+      margin: 0;
+    }
+
+    .control {
+      margin: 0;
+    }
+
+    .control-start {
+      padding: 0;
+    }
+
+    .button-control {
+      margin: 0.5rem;
+    }
+
+    .page-info {
+      display: none;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  /*
+  ##Device = Low Resolution Tablets, Mobiles (Landscape)
+  ##Screen = B/w 481px to 767px
+  */
+
+  @media (min-width: 481px) and (max-width: 767px) {
+    .parent {
+      margin: 0;
+    }
+
+    .control {
+      margin: 0;
+    }
+
+    .control-start {
+      padding: 0;
+    }
+
+    .button-control {
+      margin: 0.5rem;
+    }
+
+    .page-info {
+      display: none;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  /*
+  ##Device = Most of the Smartphones Mobiles (Portrait)
+  ##Screen = B/w 320px to 479px
+  */
+
+  @media (min-width: 320px) and (max-width: 480px) {
+    .parent {
+      margin: 0;
+    }
+
+    .control {
+      margin: 0;
+    }
+
+    .control-start {
+      padding: 0;
+    }
+
+    .button-control {
+      padding: 0.4rem;
+      margin: 0.4rem;
+    }
+
+    .page-info {
+      display: none;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+    }
+  }
 </style>

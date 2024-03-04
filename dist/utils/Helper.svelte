@@ -69,13 +69,15 @@
    * @param {String} data - base64 decoded string
    * @param {string} name - The name to use for the saved file.
    */
-  export const savePDF = async ({ fileUrl, data, name = 'download.pdf' }) => {
+  export const savePDF = async (fileUrl, data, name = 'download.pdf') => {
+    console.log(fileUrl, data, name)
     const link = document.createElement('a')
     link.download = name
     link.rel = 'noopener'
     if (!fileUrl) {
       fileUrl = `data:application/pdf;base64,${btoa(data)}`
     }
+
     let blobs = await fetch(fileUrl).then(r => r.blob())
     if (!blobs || !(blobs instanceof Blob)) {
       console.log('Invalid blob object passed to URL.createObjectURL()')

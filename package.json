@@ -23,6 +23,7 @@
   "type": "module",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "svelte": "./dist/index.js"
     }
   },
@@ -34,6 +35,7 @@
     "dev": "vite dev",
     "format": "prettier --write --plugin-search-dir=. .",
     "lint": "prettier --check --plugin-search-dir=. . && eslint .",
+    "package": "svelte-package",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -42,6 +44,7 @@
   "devDependencies": {
     "@sveltejs/adapter-auto": "^3.1.1",
     "@sveltejs/kit": "^2.5.2",
+    "@sveltejs/package": "^2.3.1",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-svelte": "^2.35.1",

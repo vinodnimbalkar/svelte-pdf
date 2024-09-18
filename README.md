@@ -1,4 +1,5 @@
 # svelte-pdf
+# Edited to fix resize/scroll disappearing bug
 
 [![MadeWithSvelte.com shield](https://madewithsvelte.com/storage/repo-shields/2346-shield.svg)](https://madewithsvelte.com/p/svelte-pdf/shield-link)
 ![npm](https://img.shields.io/npm/dw/svelte-pdf?style=flat-square)

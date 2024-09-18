@@ -3,7 +3,7 @@
 
   import * as pdfjs from 'pdfjs-dist'
   import * as pdfWorker from 'pdfjs-dist/build/pdf.worker.mjs'
-  import { onDestroy, tick } from 'svelte'
+  import { onMount, onDestroy, tick } from 'svelte'
   import { calcRT, getPageText, onPrint, savePDF } from './utils/Helper.svelte'
   import Tooltip from './utils/Tooltip.svelte'
 
@@ -219,14 +219,36 @@
       (fileURL && fileURL.substring(fileURL.lastIndexOf('/') + 1))
     savePDF({ fileURL, data, name: fileName })
   }
+
+  // Force re-render on window resize
+  let resizeTimeout;
+  const handleResize = () => {
+    clearTimeout(resizeTimeout);
+    // Delay the re-render slightly to prevent multiple rapid renders
+    resizeTimeout = setTimeout(() => {
+      // This will trigger re-rendering by changing the key
+      renderPage(pageNum);
+    }, 300);
+  };
+
+  onMount(async () => {
+    // Listen for window resize and trigger re-render
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('scroll', handleResize); // Optional: re-render on scroll
+  });
+
   //prevent memory leak
   onDestroy(() => {
     clearInterval(interval)
     clearInterval(secondInterval)
+
+    window.removeEventListener('resize', handleResize);
+    window.removeEventListener('scroll', handleResize);
+    clearTimeout(resizeTimeout);
   })
 
-  let pageWidth
-  let pageHeight
+  let pageWidth;
+  let pageHeight;
 </script>
 
 <svelte:window bind:innerWidth={pageWidth} bind:innerHeight={pageHeight} />

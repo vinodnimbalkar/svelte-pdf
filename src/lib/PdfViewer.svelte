@@ -227,7 +227,7 @@
     // Delay the re-render slightly to prevent multiple rapid renders
     resizeTimeout = setTimeout(() => {
       // This will trigger re-rendering by changing the key
-      renderPage(pageNum);
+      queueRenderPage(pageNum);
     }, 300);
   };
 
@@ -242,8 +242,8 @@
     clearInterval(interval)
     clearInterval(secondInterval)
 
-    window.removeEventListener('resize', handleResize);
-    window.removeEventListener('scroll', handleResize);
+    // window.removeEventListener('resize', handleResize);
+    // window.removeEventListener('scroll', handleResize);
     clearTimeout(resizeTimeout);
   })
 

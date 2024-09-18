@@ -1,7 +1,7 @@
 {
-  "name": "svelte-pdf",
-  "version": "1.0.21",
-  "description": "svelte-pdf provides a component for rendering PDF documents using PDF.js",
+  "name": "svelte-pdf-resize-fix",
+  "version": "1.0.26",
+  "description": "svelte-pdf provides a component for rendering PDF documents using PDF.js ! Fixed resizing makes PDF disappear bug",
   "keywords": [
     "pdf",
     "svelte-pdf",
@@ -11,21 +11,23 @@
     "pdf-rotation",
     "pdf-navigation"
   ],
-  "homepage": "https://github.com/vinodnimbalkar/svelte-pdf#readme",
+  "homepage": "https://github.com/sdavis175/svelte-pdf#readme",
   "bugs": {
-    "url": "https://github.com/vinodnimbalkar/svelte-pdf/issues"
+    "url": "https://github.com/sdavis175/svelte-pdf/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vinodnimbalkar/svelte-pdf.git"
+    "url": "git+https://github.com/sdavis175/svelte-pdf.git"
   },
   "license": "MIT",
   "type": "module",
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "svelte": "./dist/index.js"
-    }
+    "./package.json": "./package.json",
+    ".": "./index.js",
+    "./PdfViewer.svelte": "./PdfViewer.svelte",
+    "./utils/Helper.svelte": "./utils/Helper.svelte",
+    "./utils/Tooltip.svelte": "./utils/Tooltip.svelte",
+    "./utils/classes": "./utils/classes.js"
   },
   "main": "index.js",
   "scripts": {
@@ -39,21 +41,21 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "pdfjs-dist": "^4.0.379"
+    "pdfjs-dist": "^3.8.162"
   },
   "devDependencies": {
-    "@sveltejs/adapter-auto": "^3.1.1",
-    "@sveltejs/kit": "^2.5.2",
-    "@sveltejs/package": "^2.3.1",
-    "eslint": "^8.57.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-svelte": "^2.35.1",
-    "prettier": "^3.2.5",
-    "prettier-plugin-svelte": "^3.2.2",
-    "svelte": "^4.2.12",
-    "svelte-check": "^3.6.5",
-    "svelte2tsx": "^0.7.2",
-    "typescript": "^5.3.3",
-    "vite": "^5.1.4"
-  }
+    "@sveltejs/adapter-auto": "next",
+    "@sveltejs/kit": "next",
+    "eslint": "^8.28.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-svelte3": "^4.0.0",
+    "prettier": "^2.8.0",
+    "prettier-plugin-svelte": "^2.8.1",
+    "svelte": "^3.53.1",
+    "svelte-check": "^2.9.2",
+    "svelte2tsx": "^0.5.20",
+    "typescript": "^4.9.3",
+    "vite": "^3.2.4"
+  },
+  "svelte": "./index.js"
 }

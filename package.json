@@ -1,6 +1,6 @@
 {
   "name": "svelte-pdf-resize-fix",
-  "version": "1.0.26",
+  "version": "1.0.29",
   "description": "svelte-pdf provides a component for rendering PDF documents using PDF.js ! Fixed resizing makes PDF disappear bug",
   "keywords": [
     "pdf",

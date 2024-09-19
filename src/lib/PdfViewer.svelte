@@ -233,7 +233,7 @@
   onMount(async () => {
     // Listen for window resize and trigger re-render
     window.addEventListener('resize', handleResize);
-    window.addEventListener('scroll', handleResize); // Optional: re-render on scroll
+    // window.addEventListener('scroll', handleResize); // Optional: re-render on scroll
   });
 
   //prevent memory leak
@@ -241,8 +241,10 @@
     clearInterval(interval)
     clearInterval(secondInterval)
 
-    // window.removeEventListener('resize', handleResize);
-    // window.removeEventListener('scroll', handleResize);
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('resize', handleResize);
+      // window.removeEventListener('scroll', handleResize);
+    }
     clearTimeout(resizeTimeout);
   })
 

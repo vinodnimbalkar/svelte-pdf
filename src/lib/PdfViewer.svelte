@@ -213,11 +213,11 @@
     }
   }
   //Download pdf function
-  const downloadPdf = ({ url: fileURL, data }) => {
+  const downloadPdf = ({ url: fileUrl, data }) => {
     let fileName =
       downloadFileName ||
-      (fileURL && fileURL.substring(fileURL.lastIndexOf('/') + 1))
-    savePDF({ fileURL, data, name: fileName })
+      (fileUrl && fileUrl.substring(fileUrl.lastIndexOf('/') + 1))
+    savePDF({ fileUrl, data, name: fileName })
   }
   //prevent memory leak
   onDestroy(() => {

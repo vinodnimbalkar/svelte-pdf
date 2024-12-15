@@ -1,6 +1,6 @@
 {
   "name": "svelte-pdf",
-  "version": "1.0.21",
+  "version": "1.0.22",
   "description": "svelte-pdf provides a component for rendering PDF documents using PDF.js",
   "keywords": [
     "pdf",
@@ -24,9 +24,13 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "svelte": "./dist/index.js"
+      "svelte": "./dist/index.js",
+      "import": "./dist/index.js"
     }
   },
+  "files": [
+    "dist"
+  ],
   "main": "index.js",
   "scripts": {
     "build": "vite build",
@@ -37,6 +41,9 @@
     "lint": "prettier --check --plugin-search-dir=. . && eslint .",
     "package": "svelte-package",
     "preview": "vite preview"
+  },
+  "peerDependencies": {
+    "svelte": "^4.2.12"
   },
   "dependencies": {
     "pdfjs-dist": "^4.0.379"
@@ -57,3 +64,4 @@
     "vite": "^5.1.4"
   }
 }
+

@@ -63,17 +63,18 @@ npm install svelte-pdf
 
 ## Props
 
-| prop name          | type      | default                                                                                     | Required |
-| ------------------ | --------- | ------------------------------------------------------------------------------------------- | -------- |
-| `url`              | `string`  | `N/A`                                                                                       | `Yes`    |
-| `data`             | `string`  | `N/A`                                                                                       | `No`     |
-| `scale`            | `float`   | `1.8`                                                                                       | `No`     |
-| `pageNum`          | `number`  | `1`                                                                                         | `No`     |
-| `flipTime`         | `number`  | `120`                                                                                       | `No`     |
-| `showButtons`      | `array`   | `["navigation", "zoom", "print", "rotate", "download", "autoflip", "timeInfo", "pageInfo"]` | `No`     |
-| `showBorder`       | `boolean` | `true`                                                                                      | `No`     |
-| `downloadFileName` | `string`  | `N/A`                                                                                       | `No`     |
+| prop name          | type      | default                                                                                     |
+| ------------------ | --------- | ------------------------------------------------------------------------------------------- |
+| `url`              | `string`  | `N/A`                                                                                       |
+| `data`             | `string`  | `N/A`                                                                                       |
+| `scale`            | `float`   | `1.8`                                                                                       |
+| `pageNum`          | `number`  | `1`                                                                                         |
+| `flipTime`         | `number`  | `120`                                                                                       |
+| `showButtons`      | `array`   | `["navigation", "zoom", "print", "rotate", "download", "autoflip", "timeInfo", "pageInfo"]` |
+| `showBorder`       | `boolean` | `true`                                                                                      |
+| `downloadFileName` | `string`  | `N/A`                                                                                       |
 
+Let me know if you need any further adjustments!
 ## Examples
 
 To view the examples, clone the **svelte-pdf** repo and install the dependencies:

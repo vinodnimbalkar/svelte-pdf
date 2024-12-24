@@ -16,7 +16,7 @@ Simple svelte PDF Viewer component with controls like
 
 Source code of demo page is included in example directory.
 
-https://svelte-pdf.netlify.com
+https://svelte-pdf.vinversion.com
 
 ## How to install
 

@@ -25,6 +25,7 @@
   export let totalPage = 0
   export let downloadFileName = ''
   export let showTopButton = true // boolean
+  export let onProgress = undefined 
 
   pdfjs.GlobalWorkerOptions.workerSrc = new URL( 'pdfjs-dist/build/pdf.worker.mjs', import.meta.url).toString();
 
@@ -165,6 +166,8 @@
       ...(data && { data }),
       ...(password && { password }),
     })
+    loadingTask.onProgress = onProgress
+
     loadingTask.promise
       .then(async function (pdfDoc_) {
         pdfDoc = pdfDoc_

@@ -1,16 +1,14 @@
 <script>
-  // @ts-nocheck
+  import * as pdfjs from 'pdfjs-dist';
+  import { onDestroy, tick } from 'svelte';
+  import { calcRT, getPageText, onPrint, savePDF } from './utils/Helper.svelte';
+  import Tooltip from './utils/Tooltip.svelte';
 
-  import * as pdfjs from 'pdfjs-dist'
-  import { onDestroy, tick } from 'svelte'
-  import { calcRT, getPageText, onPrint, savePDF } from './utils/Helper.svelte'
-  import Tooltip from './utils/Tooltip.svelte'
-
-  export let url
-  export let data
-  export let scale = 1.8
-  export let pageNum = 1 //must be number
-  export let flipTime = 120 //by default 2 minute, value in seconds
+  export let url;
+  export let data;
+  export let scale = 1.8;
+  export let pageNum = 1;
+  export let flipTime = 120;
   export let showButtons = [
     'navigation',
     'zoom',
@@ -20,218 +18,209 @@
     'autoflip',
     'timeInfo',
     'pageInfo',
-  ] //array
-  export let showBorder = true //boolean
-  export let totalPage = 0
-  export let downloadFileName = ''
-  export let showTopButton = true // boolean
-  export let onProgress = undefined 
+  ];
+  export let showBorder = true;
+  export let totalPage = 0;
+  export let downloadFileName = '';
+  export let showTopButton = true;
+  export let onProgress = undefined;
 
-  pdfjs.GlobalWorkerOptions.workerSrc = new URL( 'pdfjs-dist/build/pdf.worker.mjs', import.meta.url).toString();
+  pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+    'pdfjs-dist/build/pdf.worker.mjs',
+    import.meta.url
+  ).toString();
 
-  let canvas
-  let page_num = 0
-  let pageCount = 0
-  let pdfDoc = null
-  let pageRendering = false
-  let pageNumPending = null
-  let rotation = 0
-  let pdfContent = ''
-  let readingTime = 0
-  let autoFlip = false
-  let interval
-  let secondInterval
-  let seconds = flipTime
-  let pages = []
-  let password = ''
-  let passwordError = false
-  let passwordMessage = ''
-  let isInitialized = false
-  const minScale = 1.0
-  const maxScale = 2.3
+  let canvas;
+  let currentPage = 1;
+  let pageCount = 0;
+  let pdfDoc = null;
+  let pageRendering = false;
+  let pageNumPending = null;
+  let rotation = 0;
+  let pdfContent = '';
+  let readingTime = 0;
+  let autoFlip = false;
+  let interval;
+  let secondInterval;
+  let seconds = flipTime;
+  let pages = [];
+  let password = '';
+  let passwordError = false;
+  let passwordMessage = '';
+  let isInitialized = false;
+  const minScale = 1.0;
+  const maxScale = 2.3;
 
-  const renderPage = num => {
-    pageRendering = true
-    // Using promise to fetch the page
-    pdfDoc.getPage(num).then(function (page) {
-      let viewport = page.getViewport({ scale: scale, rotation: rotation })
-      const canvasContext = canvas.getContext('2d')
-      canvas.height = viewport.height
-      canvas.width = viewport.width
+  const renderPage = async (num) => {
+    if (num < 1 || num > pageCount) return;
+    pageRendering = true;
+    try {
+      const page = await pdfDoc.getPage(num);
+      const viewport = page.getViewport({ scale, rotation });
+      const canvasContext = canvas.getContext('2d');
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
 
-      // Render PDF page into canvas context
-      let renderContext = {
+      const renderContext = {
         canvasContext,
         viewport,
-      }
-      let renderTask = page.render(renderContext)
+      };
+      await page.render(renderContext).promise;
 
-      // Wait for rendering to finish
-      renderTask.promise.then(function () {
-        pageRendering = false
-        if (pageNumPending !== null) {
-          // New page rendering is pending
-          // renderPage(pageNumPending);
-          if (pageNum < pdfDoc.totalPage) {
-            pages[pageNum] = canvas
-            pageNum++
-            pdfDoc.getPage(pageNum).then(renderPage)
-          } else {
-            for (let i = 1; i < pages.length; i++) {
-              canvas.appendChild(pages[i])
+      pageRendering = false;
+      currentPage = num;
+      if (pageNumPending !== null) {
+        if (pageNum < pdfDoc.numPages) {
+          pages[pageNum -1] = canvas.cloneNode(true);
+          pageNum++;
+          await renderPage(pageNum);
+        } else {
+            for (let i = 0; i < pages.length; i++) {
+                canvas.parentNode.insertBefore(pages[i], canvas);
             }
-          }
-          pageNumPending = null
+            canvas.remove();
         }
-      })
-    })
+        pageNumPending = null;
+      }
+      // Update page counters
+      showButtons.length ? (page_num = num) : null;
+    } catch (error) {
+      console.error("Error rendering page:", error);
+      pageRendering = false;
+    }
+  };
 
-    // Update page counters
-    showButtons.length ? (page_num.textContent = num) : null
-  }
 
-  const queueRenderPage = num => {
+  const queueRenderPage = (num) => {
     if (pageRendering) {
-      pageNumPending = num
+      pdfDoc.getPage(num).then(page => {
+          if (!pageRendering) renderPage(num);
+      });
     } else {
-      renderPage(num)
+      renderPage(num);
     }
-  }
+  };
 
-  /**
-   * Displays previous page.
-   */
   const onPrevPage = () => {
-    if (pageNum <= 1) {
-      return
-    }
-    pageNum--
-    queueRenderPage(pageNum)
-  }
+    if (currentPage <= 1) return;
+      queueRenderPage(currentPage - 1);
+  };
 
-  /**
-   * Displays next page.
-   */
   const onNextPage = () => {
-    if (pageNum >= pdfDoc.numPages) {
-      return
-    }
-    pageNum++
-    queueRenderPage(pageNum)
-  }
-  /*
-   * Display Zoom In
-   */
+    if (!pdfDoc || currentPage >= pageCount) return;
+      queueRenderPage(currentPage + 1);
+  };
+
   const onZoomIn = () => {
     if (scale <= maxScale) {
-      scale = scale + 0.1
-      queueRenderPage(pageNum)
+      scale += 0.1;
+      queueRenderPage(pageNum);
     }
-  }
-  /*
-   * Display Zoom Out
-   */
+  };
+
   const onZoomOut = () => {
     if (scale >= minScale) {
-      scale = scale - 0.1
-      queueRenderPage(pageNum)
+      scale -= 0.1;
+      queueRenderPage(pageNum);
     }
-  }
+  };
 
-  const printPdf = url => {
-    onPrint(url)
-  }
+  const printPdf = (url) => {
+    onPrint(url);
+  };
 
   const clockwiseRotate = () => {
-    rotation = rotation + 90
-    queueRenderPage(pageNum)
-  }
+    rotation += 90;
+    queueRenderPage(pageNum);
+  };
 
   const antiClockwiseRotate = () => {
-    rotation = rotation - 90
-    queueRenderPage(pageNum)
-  }
+    rotation -= 90;
+    queueRenderPage(pageNum);
+  };
 
   const onPasswordSubmit = () => {
-    initialLoad()
-  }
-
-  /**
-   * Asynchronously downloads PDF.
-   */
+    initialLoad();
+  };
 
   const initialLoad = async () => {
-    let loadingTask = pdfjs.getDocument({
-      ...(url && { url }),
-      ...(data && { data }),
-      ...(password && { password }),
-    })
-    loadingTask.onProgress = onProgress
+    try {
+      const loadingTask = pdfjs.getDocument({
+        ...(url && { url }),
+        ...(data && { data }),
+        ...(password && { password }),
+      });
+      loadingTask.onProgress = onProgress;
 
-    loadingTask.promise
-      .then(async function (pdfDoc_) {
-        pdfDoc = pdfDoc_
-        passwordError = false
-        await tick()
+      pdfDoc = await loadingTask.promise;
+      passwordError = false;
+      await tick();
 
-        showButtons.length ? (pageCount.textContent = pdfDoc.numPages) : null
-        totalPage = pdfDoc.numPages
-        if (showButtons.length) {
-          for (let number = 1; number <= totalPage; number++) {
-            // Extract the text
-            getPageText(number, pdfDoc).then(function (textPage) {
-              // Show the text of the page in the console
-              pdfContent = pdfContent.concat(textPage)
-              readingTime = calcRT(pdfContent)
-            })
-          }
+      pageCount = pdfDoc.numPages;
+      totalPage = pdfDoc.numPages;
+
+      if (showButtons.includes('pageInfo')) {
+        for (let number = 1; number <= totalPage; number++) {
+          const textPage = await getPageText(number, pdfDoc);
+          pdfContent += textPage;
+          readingTime = calcRT(pdfContent);
         }
-        isInitialized = true
-      })
-      .catch(function (error) {
-        passwordError = true
-        passwordMessage = error.message
-      })
-  }
-  initialLoad()
-  $: if (isInitialized) queueRenderPage(pageNum)
+      }
 
-  //turn page after certain time interval
+      isInitialized = true;
+      renderPage(currentPage);
+    } catch (error) {
+      passwordError = true;
+      passwordMessage = error.message;
+    }
+  };
+
+  initialLoad();
+
+  // $: if (isInitialized) queueRenderPage(pageNum);
+
   const onPageTurn = () => {
-    autoFlip = !autoFlip
-    if (autoFlip === false) {
-      clearInterval(interval) //stop autoflip
-      clearInterval(secondInterval) //stop countdown seconds
-    }
-    if (autoFlip === true && pageNum <= totalPage) {
-      //countdown seconds
-      secondInterval = setInterval(() => {
-        seconds = seconds - 1
-      }, 1000)
-      interval = setInterval(() => {
-        seconds = flipTime //reset second after page flip
-        onNextPage()
-      }, flipTime * 1000) //every {flipTime} seconds
-    }
-  }
-  //Download pdf function
-  const downloadPdf = ({ url: fileUrl, data }) => {
-    let fileName =
-      downloadFileName ||
-      (fileUrl && fileUrl.substring(fileUrl.lastIndexOf('/') + 1))
-    savePDF({ fileUrl, data, name: fileName })
-  }
-  //prevent memory leak
-  onDestroy(() => {
-    clearInterval(interval)
-    clearInterval(secondInterval)
-  })
+    autoFlip = !autoFlip;
+    clearInterval(interval);
+    clearInterval(secondInterval);
 
-  let pageWidth
-  let pageHeight
+    if (autoFlip && pageNum <= totalPage) {
+      seconds = flipTime; // Reset seconds immediately
+      secondInterval = setInterval(() => {
+        seconds--;
+      }, 1000);
+
+      interval = setInterval(() => {
+        clearInterval(secondInterval); // Clear the seconds counter interval
+        seconds = flipTime; // Reset seconds *before* going to the next page
+        onNextPage();
+        if (currentPage > totalPage){
+            onPageTurn();
+        } else {
+            secondInterval = setInterval(() => {
+                seconds--;
+            }, 1000);
+        }
+      }, flipTime * 1000);
+    }
+  };
+
+  const downloadPdf = ({ url: fileUrl, data }) => {
+    const fileName = downloadFileName || (fileUrl && fileUrl.substring(fileUrl.lastIndexOf('/') + 1)) || 'download.pdf'; // Provide a default file name
+    savePDF({ fileUrl, data, name: fileName });
+  };
+
+  onDestroy(() => {
+    clearInterval(interval);
+    clearInterval(secondInterval);
+  });
+
+  let pageWidth;
+  let pageHeight;
 </script>
 
 <svelte:window bind:innerWidth={pageWidth} bind:innerHeight={pageHeight} />
+
 <div class="parent">
   <div class={showBorder === true ? 'control' : 'null'}>
     {#if passwordError === true}
@@ -500,27 +489,24 @@
               />
             </svg>
             <div class="text">
-              Page :
-              <span bind:this={page_num} />
-              /
-              <span bind:this={pageCount} />
+              Page : {currentPage} / {pageCount}
             </div>
           </span>
         </div>
         <div class={showBorder === true ? 'viewer' : 'null'}>
-          <canvas bind:this={canvas} width={pageWidth} height={pageHeight} />
+          <canvas bind:this={canvas} width={pageWidth} height={pageHeight}></canvas>
         </div>
       </div>
     {:else}
       <div class={showBorder === true ? 'viewer' : 'null'}>
-        <canvas bind:this={canvas} />
+        <canvas bind:this={canvas}></canvas>
         <!-- width={window.innerWidth} -->
         <!-- height={window.innerHeight}  -->
       </div>
     {/if}
   </div>
   {#if showTopButton}
-    <button id="topBtn" on:click={() => window.scrollTo(0, 0)}>
+    <button id="topBtn" on:click={() => window.scrollTo(0, 0)} aria-label="Back to Top">
       <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
         <path d="M7 10v8h6v-8h5l-8-8-8 8h5z" />
       </svg>

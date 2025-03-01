@@ -3,6 +3,7 @@
 [![MadeWithSvelte.com shield](https://madewithsvelte.com/storage/repo-shields/2346-shield.svg)](https://madewithsvelte.com/p/svelte-pdf/shield-link)
 ![npm](https://img.shields.io/npm/dw/svelte-pdf?style=flat-square)
 ![npm](https://img.shields.io/npm/v/svelte-pdf?style=flat-square)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/7a836d5a-d877-412f-8219-731b7a4d9d13/deploy-status)](https://app.netlify.com/sites/svelte-pdf/deploys)
 
 Simple svelte PDF Viewer component with controls like
 

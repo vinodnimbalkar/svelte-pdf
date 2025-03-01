@@ -83,7 +83,7 @@
         pageNumPending = null;
       }
       // Update page counters
-      showButtons.length ? (page_num = num) : null;
+      showButtons.length ? (pageNum = num) : null;
     } catch (error) {
       console.error("Error rendering page:", error);
       pageRendering = false;

@@ -5,7 +5,7 @@
   import Tooltip from './utils/Tooltip.svelte';
 
   export let url;
-  export let data;
+  export let data = null;
   export let scale = 1.8;
   export let pageNum = 1;
   export let flipTime = 120;

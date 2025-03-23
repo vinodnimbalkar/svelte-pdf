@@ -62,6 +62,24 @@ npm install svelte-pdf
 
 ```
 
+#### Monitoring loading progress
+
+For large PDFs, you can monitor the loading progress using the `onProgress` callback:
+
+```js
+<script>
+    import PdfViewer from 'svelte-pdf';
+
+  function handleProgress(data) {
+    const { loaded, total } = data;
+    console.log(`Loading: ${Math.round((loaded / total) * 100)}%`);
+    // You could update a progress bar or other UI element here
+  }
+</script>
+
+<PdfViewer url='./large-sample.pdf' onProgress={handleProgress} />
+```
+
 ## Props
 
 | prop name          | type      | default                                                                                     |
@@ -74,6 +92,7 @@ npm install svelte-pdf
 | `showButtons`      | `array`   | `["navigation", "zoom", "print", "rotate", "download", "autoflip", "timeInfo", "pageInfo"]` |
 | `showBorder`       | `boolean` | `true`                                                                                      |
 | `downloadFileName` | `string`  | `N/A`                                                                                       |
+| `onProgress`       | `function` | `undefined`                                                                                |
 
 Let me know if you need any further adjustments!
 ## Examples

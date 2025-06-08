@@ -12,6 +12,7 @@ Simple svelte PDF Viewer component with controls like
 - Rotation
 - Print
 - AutoFlip Page
+- External link handling
 
 ## Demo
 
@@ -80,19 +81,42 @@ For large PDFs, you can monitor the loading progress using the `onProgress` call
 <PdfViewer url='./large-sample.pdf' onProgress={handleProgress} />
 ```
 
+#### Controlling external links behavior
+
+You can control how external links within the PDF open using the `externalLinksTarget` prop:
+
+```js
+<script>
+    import PdfViewer from 'svelte-pdf';
+</script>
+
+<!-- Open links in new tab (default) -->
+<PdfViewer url='./sample.pdf' externalLinksTarget="_blank" />
+
+<!-- Open links in same tab -->
+<PdfViewer url='./sample.pdf' externalLinksTarget="_self" />
+
+<!-- Open links in parent frame -->
+<PdfViewer url='./sample.pdf' externalLinksTarget="_parent" />
+
+<!-- Open links in top-level frame -->
+<PdfViewer url='./sample.pdf' externalLinksTarget="_top" />
+```
+
 ## Props
 
-| prop name          | type      | default                                                                                     |
-| ------------------ | --------- | ------------------------------------------------------------------------------------------- |
-| `url`              | `string`  | `N/A`                                                                                       |
-| `data`             | `string`  | `N/A`                                                                                       |
-| `scale`            | `float`   | `1.8`                                                                                       |
-| `pageNum`          | `number`  | `1`                                                                                         |
-| `flipTime`         | `number`  | `120`                                                                                       |
-| `showButtons`      | `array`   | `["navigation", "zoom", "print", "rotate", "download", "autoflip", "timeInfo", "pageInfo"]` |
-| `showBorder`       | `boolean` | `true`                                                                                      |
-| `downloadFileName` | `string`  | `N/A`                                                                                       |
-| `onProgress`       | `function` | `undefined`                                                                                |
+| prop name            | type      | default                                                                                     |
+| -------------------- | --------- | ------------------------------------------------------------------------------------------- |
+| `url`                | `string`  | `N/A`                                                                                       |
+| `data`               | `string`  | `N/A`                                                                                       |
+| `scale`              | `float`   | `1.8`                                                                                       |
+| `pageNum`            | `number`  | `1`                                                                                         |
+| `flipTime`           | `number`  | `120`                                                                                       |
+| `showButtons`        | `array`   | `["navigation", "zoom", "print", "rotate", "download", "autoflip", "timeInfo", "pageInfo"]` |
+| `showBorder`         | `boolean` | `true`                                                                                      |
+| `downloadFileName`   | `string`  | `N/A`                                                                                       |
+| `onProgress`         | `function` | `undefined`                                                                                |
+| `externalLinksTarget` | `string`  | `"_blank"`                                                                                  |
 
 Let me know if you need any further adjustments!
 ## Examples

@@ -1,6 +1,6 @@
 {
   "name": "svelte-pdf",
-  "version": "1.0.27",
+  "version": "1.0.28",
   "description": "svelte-pdf provides a component for rendering PDF documents using PDF.js",
   "keywords": [
     "pdf",
@@ -46,13 +46,13 @@
     "svelte": "^5.0.0"
   },
   "dependencies": {
-    "@sveltejs/vite-plugin-svelte": "^3.0.0",
     "pdfjs-dist": "^4.1.47"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^2.0.0",
     "@sveltejs/kit": "^2.17.0",
     "@sveltejs/package": "^2.0.0",
+    "@sveltejs/vite-plugin-svelte": "^4.0.4",
     "eslint": "^9.20.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-svelte": "^2.46.1",

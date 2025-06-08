@@ -24,6 +24,7 @@
   export let downloadFileName = '';
   export let showTopButton = true;
   export let onProgress = undefined;
+  export let externalLinksTarget = '_blank';
 
   pdfjs.GlobalWorkerOptions.workerSrc = new URL(
     'pdfjs-dist/build/pdf.worker.mjs',
@@ -67,6 +68,9 @@
       };
       await page.render(renderContext).promise;
 
+      // Handle PDF links
+      await handlePageLinks(page, viewport);
+
       pageRendering = false;
       currentPage = num;
       if (pageNumPending !== null) {
@@ -90,6 +94,55 @@
     }
   };
 
+  const handlePageLinks = async (page, viewport) => {
+    try {
+      const annotations = await page.getAnnotations();
+      
+      // Remove existing link overlays for this page
+      const existingLinks = canvas.parentNode.querySelectorAll('.pdf-link-overlay');
+      existingLinks.forEach(link => link.remove());
+
+      annotations.forEach(annotation => {
+        if (annotation.subtype === 'Link' && annotation.url) {
+          createLinkOverlay(annotation, viewport);
+        }
+      });
+    } catch (error) {
+      console.warn('Could not process page annotations:', error);
+    }
+  };
+
+  const createLinkOverlay = (annotation, viewport) => {
+    const linkElement = document.createElement('a');
+    linkElement.className = 'pdf-link-overlay';
+    linkElement.href = annotation.url;
+    linkElement.target = externalLinksTarget;
+    linkElement.rel = 'noopener noreferrer';
+    
+    // Convert PDF coordinates to canvas coordinates
+    const rect = annotation.rect;
+    const [x1, y1, x2, y2] = rect;
+    
+    // Transform coordinates using viewport
+    const canvasRect = viewport.convertToViewportRectangle([x1, y1, x2, y2]);
+    
+    // Position the overlay
+    linkElement.style.position = 'absolute';
+    linkElement.style.left = `${Math.min(canvasRect[0], canvasRect[2])}px`;
+    linkElement.style.top = `${Math.min(canvasRect[1], canvasRect[3])}px`;
+    linkElement.style.width = `${Math.abs(canvasRect[2] - canvasRect[0])}px`;
+    linkElement.style.height = `${Math.abs(canvasRect[3] - canvasRect[1])}px`;
+    linkElement.style.zIndex = '10';
+    linkElement.style.background = 'transparent';
+    linkElement.style.border = 'none';
+    
+    // Make the canvas container relative if it isn't already
+    if (!canvas.parentNode.style.position) {
+      canvas.parentNode.style.position = 'relative';
+    }
+    
+    canvas.parentNode.appendChild(linkElement);
+  };
 
   const queueRenderPage = (num) => {
     if (pageRendering) {
@@ -810,5 +863,14 @@
       width: 100%;
       height: 100%;
     }
+  }
+
+  :global(.pdf-link-overlay) {
+    cursor: pointer;
+    text-decoration: none;
+  }
+  
+  :global(.pdf-link-overlay:hover) {
+    background-color: rgba(0, 123, 255, 0.1) !important;
   }
 </style>

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import * as pdfjs from 'pdfjs-dist';
   import { onDestroy, tick } from 'svelte';
   import { calcRT, getPageText, onPrint, savePDF } from './utils/Helper.svelte';
@@ -9,22 +9,13 @@
   const {
     url,
     data = null,
-    scale: initialScale = 1.8,
+    scale: initialScale = 1,
     // Accept both currentPage (preferred) and pageNum (legacy alias)
     currentPage: controlledCurrentPage,
     pageNum: legacyPageNum,
     flipTime: initialFlipTime = 120,
-    showButtons: initialShowButtons = [
-      'navigation',
-      'zoom',
-      'print',
-      'rotate',
-      'download',
-      'autoflip',
-      'timeInfo',
-      'pageInfo',
-    ],
-    showBorder: initialShowBorder = true,
+    showButtons: initialShowButtons = [],
+    showBorder: initialShowBorder = false,
     totalPage: initialTotalPage = 0,
     downloadFileName: initialDownloadFileName = '',
     showTopButton: initialShowTopButton = true,
@@ -37,20 +28,23 @@
     import.meta.url
   ).toString();
 
-  let canvas = $state();
+  // Narrow incorrect d.ts for savePDF to the actual call signature we use
+  const savePDFFn = (savePDF as unknown) as (args: { fileUrl?: string; data?: string; name?: string }) => Promise<void>;
+
+  let canvas: HTMLCanvasElement | null = $state(null);
   let currentPage = $state(controlledCurrentPage ?? legacyPageNum ?? 1);
   let pageCount = $state(0);
-  let pdfDoc = null;
-  let pageRendering = false;
-  let pageNumPending = null;
+  let pdfDoc: any = null;
+  let pageRendering:boolean = false;
+  let pageNumPending:number | null = null;
   let rotation = 0;
   let pdfContent = '';
   let readingTime = $state(0);
   let autoFlip = $state(false);
-  let interval;
-  let secondInterval;
+  let interval: number | undefined;
+  let secondInterval: number | undefined;
   let seconds = $state(initialFlipTime);
-  let pages = [];
+  let pages: Node[] = [];
   let password = $state('');
   let passwordError = $state(false);
   let passwordMessage = $state('');
@@ -69,19 +63,21 @@
   let pageNum = $state(1);
 
   $effect(() => {
-    console.log('currentPage', currentPage);
+
     pageNum = currentPage;
   });
 
-  const renderPage = async (num) => {
+  const renderPage = async (num: number) => {
     if (num < 1 || num > pageCount) return;
     pageRendering = true;
     try {
+      if (!pdfDoc || !canvas) return;
       const page = await pdfDoc.getPage(num);
       const viewport = page.getViewport({ scale, rotation });
       const canvasContext = canvas.getContext('2d');
-      canvas.height = viewport.height;
-      canvas.width = viewport.width;
+      if (!canvasContext) return;
+      canvas.height = viewport.height as number;
+      canvas.width = viewport.width as number;
 
       const renderContext = {
         canvasContext,
@@ -96,14 +92,16 @@
       currentPage = num;
       if (pageNumPending !== null) {
         if (pageNum < pdfDoc.numPages) {
-          pages[pageNum -1] = canvas.cloneNode(true);
+          pages[pageNum - 1] = canvas.cloneNode(true);
           pageNum++;
           await renderPage(pageNum);
         } else {
-            for (let i = 0; i < pages.length; i++) {
-                canvas.parentNode.insertBefore(pages[i], canvas);
+          for (let i = 0; i < pages.length; i++) {
+            if (canvas.parentNode) {
+              canvas.parentNode.insertBefore(pages[i], canvas);
             }
-            canvas.remove();
+          }
+          canvas.remove();
         }
         pageNumPending = null;
       }
@@ -115,15 +113,16 @@
     }
   };
 
-  const handlePageLinks = async (page, viewport) => {
+  const handlePageLinks = async (page: any, viewport: any) => {
     try {
       const annotations = await page.getAnnotations();
       
       // Remove existing link overlays for this page
-      const existingLinks = canvas.parentNode.querySelectorAll('.pdf-link-overlay');
-      existingLinks.forEach(link => link.remove());
+      const parent = (canvas?.parentNode as HTMLElement | null) ?? null;
+      const existingLinks = parent?.querySelectorAll('.pdf-link-overlay') ?? [];
+      existingLinks.forEach((link: Element) => link.remove());
 
-      annotations.forEach(annotation => {
+      annotations.forEach((annotation: any) => {
         if (annotation.subtype === 'Link' && annotation.url) {
           createLinkOverlay(annotation, viewport);
         }
@@ -133,7 +132,7 @@
     }
   };
 
-  const createLinkOverlay = (annotation, viewport) => {
+  const createLinkOverlay = (annotation: any, viewport: any) => {
     const linkElement = document.createElement('a');
     linkElement.className = 'pdf-link-overlay';
     linkElement.href = annotation.url;
@@ -141,11 +140,11 @@
     linkElement.rel = 'noopener noreferrer';
     
     // Convert PDF coordinates to canvas coordinates
-    const rect = annotation.rect;
+    const rect = annotation.rect as [number, number, number, number];
     const [x1, y1, x2, y2] = rect;
     
     // Transform coordinates using viewport
-    const canvasRect = viewport.convertToViewportRectangle([x1, y1, x2, y2]);
+    const canvasRect = viewport.convertToViewportRectangle([x1, y1, x2, y2]) as [number, number, number, number];
     
     // Position the overlay
     linkElement.style.position = 'absolute';
@@ -158,16 +157,16 @@
     linkElement.style.border = 'none';
     
     // Make the canvas container relative if it isn't already
-    if (!canvas.parentNode.style.position) {
-      canvas.parentNode.style.position = 'relative';
+    const parent = (canvas?.parentNode as HTMLElement | null) ?? null;
+    if (parent && !parent.style.position) {
+      parent.style.position = 'relative';
     }
-    
-    canvas.parentNode.appendChild(linkElement);
+    parent?.appendChild(linkElement);
   };
 
-  const queueRenderPage = (num) => {
+  const queueRenderPage = (num: number) => {
     if (pageRendering) {
-      pdfDoc.getPage(num).then(page => {
+      pdfDoc.getPage(num).then(() => {
           if (!pageRendering) renderPage(num);
       });
     } else {
@@ -199,7 +198,7 @@
     }
   };
 
-  const printPdf = (url) => {
+  const printPdf = (url: string) => {
     onPrint(url);
   };
 
@@ -237,7 +236,7 @@
         for (let number = 1; number <= totalPage; number++) {
           const textPage = await getPageText(number, pdfDoc);
           pdfContent += textPage;
-          readingTime = calcRT(pdfContent);
+          readingTime = calcRT(pdfContent) ?? 0;
         }
       }
 
@@ -245,7 +244,7 @@
       renderPage(currentPage);
     } catch (error) {
       passwordError = true;
-      passwordMessage = error.message;
+      passwordMessage = error instanceof Error ? error.message : String(error);
     }
   };
 
@@ -255,17 +254,17 @@
 
   const onPageTurn = () => {
     autoFlip = !autoFlip;
-    clearInterval(interval);
-    clearInterval(secondInterval);
+    if (interval !== undefined) clearInterval(interval);
+    if (secondInterval !== undefined) clearInterval(secondInterval);
 
     if (autoFlip && pageNum <= totalPage) {
       seconds = flipTime; // Reset seconds immediately
       secondInterval = setInterval(() => {
         seconds--;
-      }, 1000);
+      }, 1000) as unknown as number;
 
       interval = setInterval(() => {
-        clearInterval(secondInterval); // Clear the seconds counter interval
+        if (secondInterval !== undefined) clearInterval(secondInterval); // Clear the seconds counter interval
         seconds = flipTime; // Reset seconds *before* going to the next page
         onNextPage();
         if (currentPage > totalPage){
@@ -273,24 +272,24 @@
         } else {
             secondInterval = setInterval(() => {
                 seconds--;
-            }, 1000);
+            }, 1000) as unknown as number;
         }
-      }, flipTime * 1000);
+      }, flipTime * 1000) as unknown as number;
     }
   };
 
-  const downloadPdf = ({ url: fileUrl, data }) => {
+  const downloadPdf = ({ url: fileUrl, data }: { url?: string; data?: string }) => {
     const fileName = downloadFileName || (fileUrl && fileUrl.substring(fileUrl.lastIndexOf('/') + 1)) || 'download.pdf'; // Provide a default file name
-    savePDF({ fileUrl, data, name: fileName });
+    savePDFFn({ fileUrl, data, name: fileName });
   };
 
   onDestroy(() => {
-    clearInterval(interval);
-    clearInterval(secondInterval);
+    if (interval !== undefined) clearInterval(interval);
+    if (secondInterval !== undefined) clearInterval(secondInterval);
   });
 
-  let pageWidth = $state();
-  let pageHeight = $state();
+  let pageWidth = $state(0);
+  let pageHeight = $state(0);
 
   // React to external controlled page changes
   $effect(() => {
@@ -323,6 +322,7 @@
           {#if showButtons.includes('navigation')}
             <Tooltip>
               <span
+                aria-label="Previous Page"
                 role="button"
                 tabindex="0"
                 slot="activator"
@@ -344,6 +344,7 @@
             </Tooltip>
             <Tooltip>
               <span
+                aria-label="Next Page"
                 role="button"
                 tabindex="0"
                 slot="activator"

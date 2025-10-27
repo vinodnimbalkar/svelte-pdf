@@ -4,53 +4,74 @@
   import { calcRT, getPageText, onPrint, savePDF } from './utils/Helper.svelte';
   import Tooltip from './utils/Tooltip.svelte';
 
-  export let url;
-  export let data = null;
-  export let scale = 1.8;
-  export let pageNum = 1;
-  export let flipTime = 120;
-  export let showButtons = [
-    'navigation',
-    'zoom',
-    'print',
-    'rotate',
-    'download',
-    'autoflip',
-    'timeInfo',
-    'pageInfo',
-  ];
-  export let showBorder = true;
-  export let totalPage = 0;
-  export let downloadFileName = '';
-  export let showTopButton = true;
-  export let onProgress = undefined;
-  export let externalLinksTarget = '_blank';
+  // Svelte 5 runes: use $props instead of export let
+  const props = $props();
+  const {
+    url,
+    data = null,
+    scale: initialScale = 1.8,
+    // Accept both currentPage (preferred) and pageNum (legacy alias)
+    currentPage: controlledCurrentPage,
+    pageNum: legacyPageNum,
+    flipTime: initialFlipTime = 120,
+    showButtons: initialShowButtons = [
+      'navigation',
+      'zoom',
+      'print',
+      'rotate',
+      'download',
+      'autoflip',
+      'timeInfo',
+      'pageInfo',
+    ],
+    showBorder: initialShowBorder = true,
+    totalPage: initialTotalPage = 0,
+    downloadFileName: initialDownloadFileName = '',
+    showTopButton: initialShowTopButton = true,
+    onProgress,
+    externalLinksTarget = '_blank',
+  } = props;
 
   pdfjs.GlobalWorkerOptions.workerSrc = new URL(
     'pdfjs-dist/build/pdf.worker.mjs',
     import.meta.url
   ).toString();
 
-  let canvas;
-  let currentPage = 1;
-  let pageCount = 0;
+  let canvas = $state();
+  let currentPage = $state(controlledCurrentPage ?? legacyPageNum ?? 1);
+  let pageCount = $state(0);
   let pdfDoc = null;
   let pageRendering = false;
   let pageNumPending = null;
   let rotation = 0;
   let pdfContent = '';
-  let readingTime = 0;
-  let autoFlip = false;
+  let readingTime = $state(0);
+  let autoFlip = $state(false);
   let interval;
   let secondInterval;
-  let seconds = flipTime;
+  let seconds = $state(initialFlipTime);
   let pages = [];
-  let password = '';
-  let passwordError = false;
-  let passwordMessage = '';
+  let password = $state('');
+  let passwordError = $state(false);
+  let passwordMessage = $state('');
   let isInitialized = false;
   const minScale = 1.0;
   const maxScale = 2.3;
+
+  // Local mutable state derived from props
+  let scale = $state(initialScale);
+  let flipTime = initialFlipTime;
+  let showButtons = initialShowButtons;
+  let showBorder = initialShowBorder;
+  let totalPage = $state(initialTotalPage);
+  let downloadFileName = initialDownloadFileName;
+  let showTopButton = initialShowTopButton;
+  let pageNum = $state(1);
+
+  $effect(() => {
+    console.log('currentPage', currentPage);
+    pageNum = currentPage;
+  });
 
   const renderPage = async (num) => {
     if (num < 1 || num > pageCount) return;
@@ -268,8 +289,17 @@
     clearInterval(secondInterval);
   });
 
-  let pageWidth;
-  let pageHeight;
+  let pageWidth = $state();
+  let pageHeight = $state();
+
+  // React to external controlled page changes
+  $effect(() => {
+    const desiredPage = props.currentPage ?? props.pageNum;
+    if (!isInitialized || desiredPage == null) return;
+    if (desiredPage !== currentPage && desiredPage >= 1 && desiredPage <= pageCount) {
+      queueRenderPage(desiredPage);
+    }
+  });
 </script>
 
 <svelte:window bind:innerWidth={pageWidth} bind:innerHeight={pageHeight} />
@@ -282,7 +312,7 @@
         <p class="password-message">{passwordMessage}</p>
         <div class="password-container">
           <input type="password" class="password-input" bind:value={password} />
-          <button on:click={onPasswordSubmit} class="password-button">
+          <button onclick={onPasswordSubmit} class="password-button">
             Submit
           </button>
         </div>
@@ -297,8 +327,7 @@
                 tabindex="0"
                 slot="activator"
                 class="button-control {pageNum <= 1 ? 'disabled' : null}"
-                on:click={() => onPrevPage()}
-                on:keydown
+                onclick={() => onPrevPage()}
               >
                 <svg
                   class="icon"
@@ -321,8 +350,7 @@
                 class="button-control {pageNum >= totalPage
                   ? 'disabled'
                   : null}"
-                on:click={() => onNextPage()}
-                on:keydown
+                onclick={() => onNextPage()}
               >
                 <svg
                   class="icon"
@@ -345,8 +373,7 @@
                 tabindex="0"
                 slot="activator"
                 class="button-control {scale >= maxScale ? 'disabled' : null}"
-                on:click={() => onZoomIn()}
-                on:keydown
+                onclick={() => onZoomIn()}
               >
                 <svg
                   class="icon"
@@ -369,8 +396,7 @@
                 tabindex="0"
                 slot="activator"
                 class="button-control {scale <= minScale ? 'disabled' : null}"
-                on:click={() => onZoomOut()}
-                on:keydown
+                onclick={() => onZoomOut()}
               >
                 <svg
                   class="icon"
@@ -395,8 +421,7 @@
                 tabindex="0"
                 slot="activator"
                 class="button-control"
-                on:click={() => printPdf(url)}
-                on:keydown
+                onclick={() => printPdf(url)}
               >
                 <svg
                   class="icon"
@@ -419,8 +444,7 @@
                 tabindex="0"
                 slot="activator"
                 class="button-control"
-                on:click={() => antiClockwiseRotate()}
-                on:keydown
+                onclick={() => antiClockwiseRotate()}
               >
                 <svg
                   class="icon rot-icon"
@@ -441,8 +465,7 @@
                 tabindex="0"
                 slot="activator"
                 class="button-control"
-                on:click={() => clockwiseRotate()}
-                on:keydown
+                onclick={() => clockwiseRotate()}
               >
                 <svg
                   class="icon"
@@ -465,8 +488,7 @@
                 tabindex="0"
                 slot="activator"
                 class="button-control"
-                on:click={() => downloadPdf({ url, data })}
-                on:keydown
+                onclick={() => downloadPdf({ url, data })}
               >
                 <svg
                   class="icon"
@@ -486,8 +508,7 @@
                 tabindex="0"
                 slot="activator"
                 class="page-info button-control"
-                on:click={() => onPageTurn()}
-                on:keydown
+                onclick={() => onPageTurn()}
               >
                 <svg
                   class="icon"
@@ -559,7 +580,7 @@
     {/if}
   </div>
   {#if showTopButton}
-    <button id="topBtn" on:click={() => window.scrollTo(0, 0)} aria-label="Back to Top">
+    <button id="topBtn" onclick={() => window.scrollTo(0, 0)} aria-label="Back to Top">
       <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
         <path d="M7 10v8h6v-8h5l-8-8-8 8h5z" />
       </svg>

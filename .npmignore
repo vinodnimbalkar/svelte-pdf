@@ -1,5 +1,22 @@
-/node_modules/
-/public/build/
-/example
-
+# Development files
+.vscode/
+.idea/
+*.log
 .DS_Store
+
+# Source files (we only need dist/)
+src/
+static/
+.svelte-kit/
+
+# Config files
+svelte.config.js
+vite.config.js
+jsconfig.json
+
+# Documentation and meta
+README.md
+
+# Lock files
+package-lock.json
+pnpm-lock.yaml

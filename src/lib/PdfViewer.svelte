@@ -1,66 +1,83 @@
-<script>
+<script lang="ts">
   import * as pdfjs from 'pdfjs-dist';
   import { onDestroy, tick } from 'svelte';
   import { calcRT, getPageText, onPrint, savePDF } from './utils/Helper.svelte';
   import Tooltip from './utils/Tooltip.svelte';
 
-  export let url;
-  export let data = null;
-  export let scale = 1.8;
-  export let pageNum = 1;
-  export let flipTime = 120;
-  export let showButtons = [
-    'navigation',
-    'zoom',
-    'print',
-    'rotate',
-    'download',
-    'autoflip',
-    'timeInfo',
-    'pageInfo',
-  ];
-  export let showBorder = true;
-  export let totalPage = 0;
-  export let downloadFileName = '';
-  export let showTopButton = true;
-  export let onProgress = undefined;
-  export let externalLinksTarget = '_blank';
+  // Svelte 5 runes: use $props instead of export let
+  const props = $props();
+  const {
+    url,
+    data = null,
+    scale: initialScale = 1,
+    // Accept both currentPage (preferred) and pageNum (legacy alias)
+    currentPage: controlledCurrentPage,
+    pageNum: legacyPageNum,
+    flipTime: initialFlipTime = 120,
+    showButtons: initialShowButtons = [],
+    showBorder: initialShowBorder = false,
+    totalPage: initialTotalPage = 0,
+    downloadFileName: initialDownloadFileName = '',
+    showTopButton: initialShowTopButton = true,
+    onProgress,
+    externalLinksTarget = '_blank',
+  } = props;
 
   pdfjs.GlobalWorkerOptions.workerSrc = new URL(
     'pdfjs-dist/build/pdf.worker.mjs',
     import.meta.url
   ).toString();
 
-  let canvas;
-  let currentPage = 1;
-  let pageCount = 0;
-  let pdfDoc = null;
-  let pageRendering = false;
-  let pageNumPending = null;
+  // Narrow incorrect d.ts for savePDF to the actual call signature we use
+  const savePDFFn = (savePDF as unknown) as (args: { fileUrl?: string; data?: string; name?: string }) => Promise<void>;
+
+  let canvas: HTMLCanvasElement | null = $state(null);
+  let currentPage = $state(controlledCurrentPage ?? legacyPageNum ?? 1);
+  let pageCount = $state(0);
+  let pdfDoc: any = null;
+  let pageRendering:boolean = false;
+  let pageNumPending:number | null = null;
   let rotation = 0;
   let pdfContent = '';
-  let readingTime = 0;
-  let autoFlip = false;
-  let interval;
-  let secondInterval;
-  let seconds = flipTime;
-  let pages = [];
-  let password = '';
-  let passwordError = false;
-  let passwordMessage = '';
+  let readingTime = $state(0);
+  let autoFlip = $state(false);
+  let interval: number | undefined;
+  let secondInterval: number | undefined;
+  let seconds = $state(initialFlipTime);
+  let pages: Node[] = [];
+  let password = $state('');
+  let passwordError = $state(false);
+  let passwordMessage = $state('');
   let isInitialized = false;
   const minScale = 1.0;
   const maxScale = 2.3;
 
-  const renderPage = async (num) => {
+  // Local mutable state derived from props
+  let scale = $state(initialScale);
+  let flipTime = initialFlipTime;
+  let showButtons = initialShowButtons;
+  let showBorder = initialShowBorder;
+  let totalPage = $state(initialTotalPage);
+  let downloadFileName = initialDownloadFileName;
+  let showTopButton = initialShowTopButton;
+  let pageNum = $state(1);
+
+  $effect(() => {
+
+    pageNum = currentPage;
+  });
+
+  const renderPage = async (num: number) => {
     if (num < 1 || num > pageCount) return;
     pageRendering = true;
     try {
+      if (!pdfDoc || !canvas) return;
       const page = await pdfDoc.getPage(num);
       const viewport = page.getViewport({ scale, rotation });
       const canvasContext = canvas.getContext('2d');
-      canvas.height = viewport.height;
-      canvas.width = viewport.width;
+      if (!canvasContext) return;
+      canvas.height = viewport.height as number;
+      canvas.width = viewport.width as number;
 
       const renderContext = {
         canvasContext,
@@ -75,14 +92,16 @@
       currentPage = num;
       if (pageNumPending !== null) {
         if (pageNum < pdfDoc.numPages) {
-          pages[pageNum -1] = canvas.cloneNode(true);
+          pages[pageNum - 1] = canvas.cloneNode(true);
           pageNum++;
           await renderPage(pageNum);
         } else {
-            for (let i = 0; i < pages.length; i++) {
-                canvas.parentNode.insertBefore(pages[i], canvas);
+          for (let i = 0; i < pages.length; i++) {
+            if (canvas.parentNode) {
+              canvas.parentNode.insertBefore(pages[i], canvas);
             }
-            canvas.remove();
+          }
+          canvas.remove();
         }
         pageNumPending = null;
       }
@@ -94,15 +113,16 @@
     }
   };
 
-  const handlePageLinks = async (page, viewport) => {
+  const handlePageLinks = async (page: any, viewport: any) => {
     try {
       const annotations = await page.getAnnotations();
       
       // Remove existing link overlays for this page
-      const existingLinks = canvas.parentNode.querySelectorAll('.pdf-link-overlay');
-      existingLinks.forEach(link => link.remove());
+      const parent = (canvas?.parentNode as HTMLElement | null) ?? null;
+      const existingLinks = parent?.querySelectorAll('.pdf-link-overlay') ?? [];
+      existingLinks.forEach((link: Element) => link.remove());
 
-      annotations.forEach(annotation => {
+      annotations.forEach((annotation: any) => {
         if (annotation.subtype === 'Link' && annotation.url) {
           createLinkOverlay(annotation, viewport);
         }
@@ -112,7 +132,7 @@
     }
   };
 
-  const createLinkOverlay = (annotation, viewport) => {
+  const createLinkOverlay = (annotation: any, viewport: any) => {
     const linkElement = document.createElement('a');
     linkElement.className = 'pdf-link-overlay';
     linkElement.href = annotation.url;
@@ -120,11 +140,11 @@
     linkElement.rel = 'noopener noreferrer';
     
     // Convert PDF coordinates to canvas coordinates
-    const rect = annotation.rect;
+    const rect = annotation.rect as [number, number, number, number];
     const [x1, y1, x2, y2] = rect;
     
     // Transform coordinates using viewport
-    const canvasRect = viewport.convertToViewportRectangle([x1, y1, x2, y2]);
+    const canvasRect = viewport.convertToViewportRectangle([x1, y1, x2, y2]) as [number, number, number, number];
     
     // Position the overlay
     linkElement.style.position = 'absolute';
@@ -137,16 +157,16 @@
     linkElement.style.border = 'none';
     
     // Make the canvas container relative if it isn't already
-    if (!canvas.parentNode.style.position) {
-      canvas.parentNode.style.position = 'relative';
+    const parent = (canvas?.parentNode as HTMLElement | null) ?? null;
+    if (parent && !parent.style.position) {
+      parent.style.position = 'relative';
     }
-    
-    canvas.parentNode.appendChild(linkElement);
+    parent?.appendChild(linkElement);
   };
 
-  const queueRenderPage = (num) => {
+  const queueRenderPage = (num: number) => {
     if (pageRendering) {
-      pdfDoc.getPage(num).then(page => {
+      pdfDoc.getPage(num).then(() => {
           if (!pageRendering) renderPage(num);
       });
     } else {
@@ -178,7 +198,7 @@
     }
   };
 
-  const printPdf = (url) => {
+  const printPdf = (url: string) => {
     onPrint(url);
   };
 
@@ -216,7 +236,7 @@
         for (let number = 1; number <= totalPage; number++) {
           const textPage = await getPageText(number, pdfDoc);
           pdfContent += textPage;
-          readingTime = calcRT(pdfContent);
+          readingTime = calcRT(pdfContent) ?? 0;
         }
       }
 
@@ -224,7 +244,7 @@
       renderPage(currentPage);
     } catch (error) {
       passwordError = true;
-      passwordMessage = error.message;
+      passwordMessage = error instanceof Error ? error.message : String(error);
     }
   };
 
@@ -234,17 +254,17 @@
 
   const onPageTurn = () => {
     autoFlip = !autoFlip;
-    clearInterval(interval);
-    clearInterval(secondInterval);
+    if (interval !== undefined) clearInterval(interval);
+    if (secondInterval !== undefined) clearInterval(secondInterval);
 
     if (autoFlip && pageNum <= totalPage) {
       seconds = flipTime; // Reset seconds immediately
       secondInterval = setInterval(() => {
         seconds--;
-      }, 1000);
+      }, 1000) as unknown as number;
 
       interval = setInterval(() => {
-        clearInterval(secondInterval); // Clear the seconds counter interval
+        if (secondInterval !== undefined) clearInterval(secondInterval); // Clear the seconds counter interval
         seconds = flipTime; // Reset seconds *before* going to the next page
         onNextPage();
         if (currentPage > totalPage){
@@ -252,24 +272,33 @@
         } else {
             secondInterval = setInterval(() => {
                 seconds--;
-            }, 1000);
+            }, 1000) as unknown as number;
         }
-      }, flipTime * 1000);
+      }, flipTime * 1000) as unknown as number;
     }
   };
 
-  const downloadPdf = ({ url: fileUrl, data }) => {
+  const downloadPdf = ({ url: fileUrl, data }: { url?: string; data?: string }) => {
     const fileName = downloadFileName || (fileUrl && fileUrl.substring(fileUrl.lastIndexOf('/') + 1)) || 'download.pdf'; // Provide a default file name
-    savePDF({ fileUrl, data, name: fileName });
+    savePDFFn({ fileUrl, data, name: fileName });
   };
 
   onDestroy(() => {
-    clearInterval(interval);
-    clearInterval(secondInterval);
+    if (interval !== undefined) clearInterval(interval);
+    if (secondInterval !== undefined) clearInterval(secondInterval);
   });
 
-  let pageWidth;
-  let pageHeight;
+  let pageWidth = $state(0);
+  let pageHeight = $state(0);
+
+  // React to external controlled page changes
+  $effect(() => {
+    const desiredPage = props.currentPage ?? props.pageNum;
+    if (!isInitialized || desiredPage == null) return;
+    if (desiredPage !== currentPage && desiredPage >= 1 && desiredPage <= pageCount) {
+      queueRenderPage(desiredPage);
+    }
+  });
 </script>
 
 <svelte:window bind:innerWidth={pageWidth} bind:innerHeight={pageHeight} />
@@ -282,7 +311,7 @@
         <p class="password-message">{passwordMessage}</p>
         <div class="password-container">
           <input type="password" class="password-input" bind:value={password} />
-          <button on:click={onPasswordSubmit} class="password-button">
+          <button onclick={onPasswordSubmit} class="password-button">
             Submit
           </button>
         </div>
@@ -293,12 +322,12 @@
           {#if showButtons.includes('navigation')}
             <Tooltip>
               <span
+                aria-label="Previous Page"
                 role="button"
                 tabindex="0"
                 slot="activator"
                 class="button-control {pageNum <= 1 ? 'disabled' : null}"
-                on:click={() => onPrevPage()}
-                on:keydown
+                onclick={() => onPrevPage()}
               >
                 <svg
                   class="icon"
@@ -315,14 +344,14 @@
             </Tooltip>
             <Tooltip>
               <span
+                aria-label="Next Page"
                 role="button"
                 tabindex="0"
                 slot="activator"
                 class="button-control {pageNum >= totalPage
                   ? 'disabled'
                   : null}"
-                on:click={() => onNextPage()}
-                on:keydown
+                onclick={() => onNextPage()}
               >
                 <svg
                   class="icon"
@@ -345,8 +374,7 @@
                 tabindex="0"
                 slot="activator"
                 class="button-control {scale >= maxScale ? 'disabled' : null}"
-                on:click={() => onZoomIn()}
-                on:keydown
+                onclick={() => onZoomIn()}
               >
                 <svg
                   class="icon"
@@ -369,8 +397,7 @@
                 tabindex="0"
                 slot="activator"
                 class="button-control {scale <= minScale ? 'disabled' : null}"
-                on:click={() => onZoomOut()}
-                on:keydown
+                onclick={() => onZoomOut()}
               >
                 <svg
                   class="icon"
@@ -395,8 +422,7 @@
                 tabindex="0"
                 slot="activator"
                 class="button-control"
-                on:click={() => printPdf(url)}
-                on:keydown
+                onclick={() => printPdf(url)}
               >
                 <svg
                   class="icon"
@@ -419,8 +445,7 @@
                 tabindex="0"
                 slot="activator"
                 class="button-control"
-                on:click={() => antiClockwiseRotate()}
-                on:keydown
+                onclick={() => antiClockwiseRotate()}
               >
                 <svg
                   class="icon rot-icon"
@@ -441,8 +466,7 @@
                 tabindex="0"
                 slot="activator"
                 class="button-control"
-                on:click={() => clockwiseRotate()}
-                on:keydown
+                onclick={() => clockwiseRotate()}
               >
                 <svg
                   class="icon"
@@ -465,8 +489,7 @@
                 tabindex="0"
                 slot="activator"
                 class="button-control"
-                on:click={() => downloadPdf({ url, data })}
-                on:keydown
+                onclick={() => downloadPdf({ url, data })}
               >
                 <svg
                   class="icon"
@@ -486,8 +509,7 @@
                 tabindex="0"
                 slot="activator"
                 class="page-info button-control"
-                on:click={() => onPageTurn()}
-                on:keydown
+                onclick={() => onPageTurn()}
               >
                 <svg
                   class="icon"
@@ -559,7 +581,7 @@
     {/if}
   </div>
   {#if showTopButton}
-    <button id="topBtn" on:click={() => window.scrollTo(0, 0)} aria-label="Back to Top">
+    <button id="topBtn" onclick={() => window.scrollTo(0, 0)} aria-label="Back to Top">
       <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
         <path d="M7 10v8h6v-8h5l-8-8-8 8h5z" />
       </svg>

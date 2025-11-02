@@ -1,24 +1,30 @@
 {
   "name": "svelte-pdf",
-  "version": "1.0.28",
-  "description": "svelte-pdf provides a component for rendering PDF documents using PDF.js",
+  "version": "2.0.0",
+  "description": "Enhanced fork of svelte-pdf with Svelte 5 support - A component for rendering PDF documents using PDF.js",
   "keywords": [
     "pdf",
     "svelte-pdf",
+    "svelte5",
+    "svelte-5",
     "pdfjs",
+    "pdf-viewer",
     "pdf-print",
     "pdf-zoom",
     "pdf-rotation",
-    "pdf-navigation"
+    "pdf-navigation",
+    "sveltekit",
+    "github-package"
   ],
-  "homepage": "https://github.com/vinodnimbalkar/svelte-pdf#readme",
+  "homepage": "https://github.com/TommasoPrinetti/svelte-pdf#readme",
   "bugs": {
-    "url": "https://github.com/vinodnimbalkar/svelte-pdf/issues"
+    "url": "https://github.com/TommasoPrinetti/svelte-pdf/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vinodnimbalkar/svelte-pdf.git"
+    "url": "git+https://github.com/TommasoPrinetti/svelte-pdf.git"
   },
+  "author": "Original: Vinod Nimbalkar, Fork: Tommaso Prinetti",
   "license": "MIT",
   "type": "module",
   "exports": {
@@ -31,7 +37,7 @@
   "files": [
     "dist"
   ],
-  "main": "index.js",
+  "main": "./dist/index.js",
   "scripts": {
     "build": "vite build",
     "check": "svelte-check --tsconfig ./jsconfig.json",
@@ -40,6 +46,7 @@
     "format": "prettier --write --plugin-search-dir=. .",
     "lint": "prettier --check --plugin-search-dir=. . && eslint .",
     "package": "svelte-package",
+    "prepare": "npm run package",
     "preview": "vite preview"
   },
   "peerDependencies": {
@@ -49,7 +56,7 @@
     "pdfjs-dist": "^4.1.47"
   },
   "devDependencies": {
-    "@sveltejs/adapter-auto": "^2.0.0",
+    "@sveltejs/adapter-auto": "^3.0.0",
     "@sveltejs/kit": "^2.17.0",
     "@sveltejs/package": "^2.0.0",
     "@sveltejs/vite-plugin-svelte": "^4.0.4",

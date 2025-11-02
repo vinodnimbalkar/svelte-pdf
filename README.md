@@ -109,7 +109,7 @@ You can control how external links within the PDF open using the `externalLinksT
 | -------------------- | --------- | ------------------------------------------------------------------------------------------- |
 | `url`                | `string`  | `N/A`                                                                                       |
 | `data`               | `string`  | `N/A`                                                                                       |
-| `scale`              | `float`   | `1.8`                                                                                       |
+| `scale`              | `float`   | `1`                                                                                       |
 | `pageNum`            | `number`  | `1`                                                                                         |
 | `flipTime`           | `number`  | `120`                                                                                       |
 | `showButtons`        | `array`   | `["navigation", "zoom", "print", "rotate", "download", "autoflip", "timeInfo", "pageInfo"]` |

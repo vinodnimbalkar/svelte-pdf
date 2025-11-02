@@ -1,6 +1,6 @@
 {
   "name": "svelte-pdf",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "svelte-pdf provides a component for rendering PDF documents using PDF.js",
   "keywords": [
     "pdf",

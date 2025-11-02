@@ -1,8 +1,8 @@
 <script lang="ts">
-  import * as pdfjs from 'pdfjs-dist';
-  import { onDestroy, tick } from 'svelte';
-  import { calcRT, getPageText, onPrint, savePDF } from './utils/Helper.svelte';
-  import Tooltip from './utils/Tooltip.svelte';
+  import * as pdfjs from "pdfjs-dist";
+  import { onDestroy, tick } from "svelte";
+  import { calcRT, getPageText, onPrint, savePDF } from "./utils/Helper.svelte";
+  import Tooltip from "./utils/Tooltip.svelte";
 
   // Svelte 5 runes: use $props instead of export let
   const props = $props();
@@ -17,37 +17,41 @@
     showButtons: initialShowButtons = [],
     showBorder: initialShowBorder = false,
     totalPage: initialTotalPage = 0,
-    downloadFileName: initialDownloadFileName = '',
+    downloadFileName: initialDownloadFileName = "",
     showTopButton: initialShowTopButton = true,
     onProgress,
-    externalLinksTarget = '_blank',
+    externalLinksTarget = "_blank",
   } = props;
 
   pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-    'pdfjs-dist/build/pdf.worker.mjs',
-    import.meta.url
+    "pdfjs-dist/build/pdf.worker.mjs",
+    import.meta.url,
   ).toString();
 
   // Narrow incorrect d.ts for savePDF to the actual call signature we use
-  const savePDFFn = (savePDF as unknown) as (args: { fileUrl?: string; data?: string; name?: string }) => Promise<void>;
+  const savePDFFn = savePDF as unknown as (args: {
+    fileUrl?: string;
+    data?: string;
+    name?: string;
+  }) => Promise<void>;
 
   let canvas: HTMLCanvasElement | null = $state(null);
   let currentPage = $state(controlledCurrentPage ?? legacyPageNum ?? 1);
   let pageCount = $state(0);
   let pdfDoc: any = null;
-  let pageRendering:boolean = false;
-  let pageNumPending:number | null = null;
+  let pageRendering: boolean = false;
+  let pageNumPending: number | null = null;
   let rotation = 0;
-  let pdfContent = '';
+  let pdfContent = "";
   let readingTime = $state(0);
   let autoFlip = $state(false);
   let interval: number | undefined;
   let secondInterval: number | undefined;
   let seconds = $state(initialFlipTime);
   let pages: Node[] = [];
-  let password = $state('');
+  let password = $state("");
   let passwordError = $state(false);
-  let passwordMessage = $state('');
+  let passwordMessage = $state("");
   let isInitialized = false;
   const minScale = 1.0;
   const maxScale = 2.3;
@@ -63,7 +67,6 @@
   let pageNum = $state(1);
 
   $effect(() => {
-
     pageNum = currentPage;
   });
 
@@ -74,7 +77,7 @@
       if (!pdfDoc || !canvas) return;
       const page = await pdfDoc.getPage(num);
       const viewport = page.getViewport({ scale, rotation });
-      const canvasContext = canvas.getContext('2d');
+      const canvasContext = canvas.getContext("2d");
       if (!canvasContext) return;
       canvas.height = viewport.height as number;
       canvas.width = viewport.width as number;
@@ -116,50 +119,55 @@
   const handlePageLinks = async (page: any, viewport: any) => {
     try {
       const annotations = await page.getAnnotations();
-      
+
       // Remove existing link overlays for this page
       const parent = (canvas?.parentNode as HTMLElement | null) ?? null;
-      const existingLinks = parent?.querySelectorAll('.pdf-link-overlay') ?? [];
+      const existingLinks = parent?.querySelectorAll(".pdf-link-overlay") ?? [];
       existingLinks.forEach((link: Element) => link.remove());
 
       annotations.forEach((annotation: any) => {
-        if (annotation.subtype === 'Link' && annotation.url) {
+        if (annotation.subtype === "Link" && annotation.url) {
           createLinkOverlay(annotation, viewport);
         }
       });
     } catch (error) {
-      console.warn('Could not process page annotations:', error);
+      console.warn("Could not process page annotations:", error);
     }
   };
 
   const createLinkOverlay = (annotation: any, viewport: any) => {
-    const linkElement = document.createElement('a');
-    linkElement.className = 'pdf-link-overlay';
+    const linkElement = document.createElement("a");
+    linkElement.className = "pdf-link-overlay";
     linkElement.href = annotation.url;
     linkElement.target = externalLinksTarget;
-    linkElement.rel = 'noopener noreferrer';
-    
+    linkElement.rel = "noopener noreferrer";
+
     // Convert PDF coordinates to canvas coordinates
     const rect = annotation.rect as [number, number, number, number];
     const [x1, y1, x2, y2] = rect;
-    
+
     // Transform coordinates using viewport
-    const canvasRect = viewport.convertToViewportRectangle([x1, y1, x2, y2]) as [number, number, number, number];
-    
+    const canvasRect = viewport.convertToViewportRectangle([
+      x1,
+      y1,
+      x2,
+      y2,
+    ]) as [number, number, number, number];
+
     // Position the overlay
-    linkElement.style.position = 'absolute';
+    linkElement.style.position = "absolute";
     linkElement.style.left = `${Math.min(canvasRect[0], canvasRect[2])}px`;
     linkElement.style.top = `${Math.min(canvasRect[1], canvasRect[3])}px`;
     linkElement.style.width = `${Math.abs(canvasRect[2] - canvasRect[0])}px`;
     linkElement.style.height = `${Math.abs(canvasRect[3] - canvasRect[1])}px`;
-    linkElement.style.zIndex = '10';
-    linkElement.style.background = 'transparent';
-    linkElement.style.border = 'none';
-    
+    linkElement.style.zIndex = "10";
+    linkElement.style.background = "transparent";
+    linkElement.style.border = "none";
+
     // Make the canvas container relative if it isn't already
     const parent = (canvas?.parentNode as HTMLElement | null) ?? null;
     if (parent && !parent.style.position) {
-      parent.style.position = 'relative';
+      parent.style.position = "relative";
     }
     parent?.appendChild(linkElement);
   };
@@ -167,7 +175,7 @@
   const queueRenderPage = (num: number) => {
     if (pageRendering) {
       pdfDoc.getPage(num).then(() => {
-          if (!pageRendering) renderPage(num);
+        if (!pageRendering) renderPage(num);
       });
     } else {
       renderPage(num);
@@ -176,12 +184,12 @@
 
   const onPrevPage = () => {
     if (currentPage <= 1) return;
-      queueRenderPage(currentPage - 1);
+    queueRenderPage(currentPage - 1);
   };
 
   const onNextPage = () => {
     if (!pdfDoc || currentPage >= pageCount) return;
-      queueRenderPage(currentPage + 1);
+    queueRenderPage(currentPage + 1);
   };
 
   const onZoomIn = () => {
@@ -232,7 +240,7 @@
       pageCount = pdfDoc.numPages;
       totalPage = pdfDoc.numPages;
 
-      if (showButtons.includes('pageInfo')) {
+      if (showButtons.includes("pageInfo")) {
         for (let number = 1; number <= totalPage; number++) {
           const textPage = await getPageText(number, pdfDoc);
           pdfContent += textPage;
@@ -267,19 +275,28 @@
         if (secondInterval !== undefined) clearInterval(secondInterval); // Clear the seconds counter interval
         seconds = flipTime; // Reset seconds *before* going to the next page
         onNextPage();
-        if (currentPage > totalPage){
-            onPageTurn();
+        if (currentPage > totalPage) {
+          onPageTurn();
         } else {
-            secondInterval = setInterval(() => {
-                seconds--;
-            }, 1000) as unknown as number;
+          secondInterval = setInterval(() => {
+            seconds--;
+          }, 1000) as unknown as number;
         }
       }, flipTime * 1000) as unknown as number;
     }
   };
 
-  const downloadPdf = ({ url: fileUrl, data }: { url?: string; data?: string }) => {
-    const fileName = downloadFileName || (fileUrl && fileUrl.substring(fileUrl.lastIndexOf('/') + 1)) || 'download.pdf'; // Provide a default file name
+  const downloadPdf = ({
+    url: fileUrl,
+    data,
+  }: {
+    url?: string;
+    data?: string;
+  }) => {
+    const fileName =
+      downloadFileName ||
+      (fileUrl && fileUrl.substring(fileUrl.lastIndexOf("/") + 1)) ||
+      "download.pdf"; // Provide a default file name
     savePDFFn({ fileUrl, data, name: fileName });
   };
 
@@ -295,7 +312,11 @@
   $effect(() => {
     const desiredPage = props.currentPage ?? props.pageNum;
     if (!isInitialized || desiredPage == null) return;
-    if (desiredPage !== currentPage && desiredPage >= 1 && desiredPage <= pageCount) {
+    if (
+      desiredPage !== currentPage &&
+      desiredPage >= 1 &&
+      desiredPage <= pageCount
+    ) {
       queueRenderPage(desiredPage);
     }
   });
@@ -304,7 +325,7 @@
 <svelte:window bind:innerWidth={pageWidth} bind:innerHeight={pageHeight} />
 
 <div class="parent">
-  <div class={showBorder === true ? 'control' : 'null'}>
+  <div class={showBorder === true ? "control" : "null"}>
     {#if passwordError === true}
       <div class="password-viewer">
         <p>This document requires a password to open:</p>
@@ -319,7 +340,7 @@
     {:else if showButtons.length}
       <div class="control-start">
         <div class="line">
-          {#if showButtons.includes('navigation')}
+          {#if showButtons.includes("navigation")}
             <Tooltip>
               <span
                 aria-label="Previous Page"
@@ -328,6 +349,8 @@
                 slot="activator"
                 class="button-control {pageNum <= 1 ? 'disabled' : null}"
                 onclick={() => onPrevPage()}
+                onkeydown={(e) =>
+                  e.key === "Enter" || e.key === " " ? onPrevPage() : null}
               >
                 <svg
                   class="icon"
@@ -352,6 +375,8 @@
                   ? 'disabled'
                   : null}"
                 onclick={() => onNextPage()}
+                onkeydown={(e) =>
+                  e.key === "Enter" || e.key === " " ? onNextPage() : null}
               >
                 <svg
                   class="icon"
@@ -367,7 +392,7 @@
               Next
             </Tooltip>
           {/if}
-          {#if showButtons.includes('zoom')}
+          {#if showButtons.includes("zoom")}
             <Tooltip>
               <span
                 role="button"
@@ -375,6 +400,8 @@
                 slot="activator"
                 class="button-control {scale >= maxScale ? 'disabled' : null}"
                 onclick={() => onZoomIn()}
+                onkeydown={(e) =>
+                  e.key === "Enter" || e.key === " " ? onZoomIn() : null}
               >
                 <svg
                   class="icon"
@@ -398,6 +425,8 @@
                 slot="activator"
                 class="button-control {scale <= minScale ? 'disabled' : null}"
                 onclick={() => onZoomOut()}
+                onkeydown={(e) =>
+                  e.key === "Enter" || e.key === " " ? onZoomOut() : null}
               >
                 <svg
                   class="icon"
@@ -415,7 +444,7 @@
               Zoom Out
             </Tooltip>
           {/if}
-          {#if showButtons.includes('print')}
+          {#if showButtons.includes("print")}
             <Tooltip>
               <span
                 role="button"
@@ -423,6 +452,8 @@
                 slot="activator"
                 class="button-control"
                 onclick={() => printPdf(url)}
+                onkeydown={(e) =>
+                  e.key === "Enter" || e.key === " " ? printPdf(url) : null}
               >
                 <svg
                   class="icon"
@@ -438,7 +469,7 @@
               Print
             </Tooltip>
           {/if}
-          {#if showButtons.includes('rotate')}
+          {#if showButtons.includes("rotate")}
             <Tooltip>
               <span
                 role="button"
@@ -446,6 +477,10 @@
                 slot="activator"
                 class="button-control"
                 onclick={() => antiClockwiseRotate()}
+                onkeydown={(e) =>
+                  e.key === "Enter" || e.key === " "
+                    ? antiClockwiseRotate()
+                    : null}
               >
                 <svg
                   class="icon rot-icon"
@@ -467,6 +502,8 @@
                 slot="activator"
                 class="button-control"
                 onclick={() => clockwiseRotate()}
+                onkeydown={(e) =>
+                  e.key === "Enter" || e.key === " " ? clockwiseRotate() : null}
               >
                 <svg
                   class="icon"
@@ -482,7 +519,7 @@
               Clockwise
             </Tooltip>
           {/if}
-          {#if showButtons.includes('download')}
+          {#if showButtons.includes("download")}
             <Tooltip>
               <span
                 role="button"
@@ -490,6 +527,10 @@
                 slot="activator"
                 class="button-control"
                 onclick={() => downloadPdf({ url, data })}
+                onkeydown={(e) =>
+                  e.key === "Enter" || e.key === " "
+                    ? downloadPdf({ url, data })
+                    : null}
               >
                 <svg
                   class="icon"
@@ -502,7 +543,7 @@
               Download
             </Tooltip>
           {/if}
-          {#if showButtons.includes('autoflip')}
+          {#if showButtons.includes("autoflip")}
             <Tooltip>
               <span
                 role="button"
@@ -510,6 +551,8 @@
                 slot="activator"
                 class="page-info button-control"
                 onclick={() => onPageTurn()}
+                onkeydown={(e) =>
+                  e.key === "Enter" || e.key === " " ? onPageTurn() : null}
               >
                 <svg
                   class="icon"
@@ -527,12 +570,12 @@
                   {/if}
                 </svg>
               </span>
-              {autoFlip === true ? seconds : 'Auto Turn Page'}
+              {autoFlip === true ? seconds : "Auto Turn Page"}
             </Tooltip>
           {/if}
           <span
             class="page-info"
-            style={showButtons.includes('timeInfo') ? '' : 'display: none;'}
+            style={showButtons.includes("timeInfo") ? "" : "display: none;"}
           >
             <svg
               class="icon"
@@ -550,7 +593,7 @@
           </span>
           <span
             class="page-info"
-            style={showButtons.includes('pageInfo') ? '' : 'display: none;'}
+            style={showButtons.includes("pageInfo") ? "" : "display: none;"}
           >
             <svg
               class="icon"
@@ -568,12 +611,13 @@
             </div>
           </span>
         </div>
-        <div class={showBorder === true ? 'viewer' : 'null'}>
-          <canvas bind:this={canvas} width={pageWidth} height={pageHeight}></canvas>
+        <div class={showBorder === true ? "viewer" : "null"}>
+          <canvas bind:this={canvas} width={pageWidth} height={pageHeight}
+          ></canvas>
         </div>
       </div>
     {:else}
-      <div class={showBorder === true ? 'viewer' : 'null'}>
+      <div class={showBorder === true ? "viewer" : "null"}>
         <canvas bind:this={canvas}></canvas>
         <!-- width={window.innerWidth} -->
         <!-- height={window.innerHeight}  -->
@@ -581,7 +625,11 @@
     {/if}
   </div>
   {#if showTopButton}
-    <button id="topBtn" onclick={() => window.scrollTo(0, 0)} aria-label="Back to Top">
+    <button
+      id="topBtn"
+      onclick={() => window.scrollTo(0, 0)}
+      aria-label="Back to Top"
+    >
       <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
         <path d="M7 10v8h6v-8h5l-8-8-8 8h5z" />
       </svg>
@@ -724,7 +772,7 @@
     transform: scaleX(-1);
   }
 
-#topBtn {
+  #topBtn {
     position: fixed;
     bottom: 10px;
     float: right;
@@ -738,12 +786,12 @@
     border-radius: 9999px;
   }
 
-#topBtn:hover {
+  #topBtn:hover {
     background-color: #000;
     color: #fff;
   }
 
-  /* 
+  /*
     ##Device = Tablets, Ipads (portrait)
     ##Screen = B/w 768px to 1024px
     */
@@ -791,7 +839,7 @@
     }
   }
 
-  /* 
+  /*
     ##Device = Low Resolution Tablets, Mobiles (Landscape)
     ##Screen = B/w 481px to 767px
     */
@@ -839,7 +887,7 @@
     }
   }
 
-  /* 
+  /*
     ##Device = Most of the Smartphones Mobiles (Portrait)
     ##Screen = B/w 320px to 479px
     */
@@ -891,7 +939,7 @@
     cursor: pointer;
     text-decoration: none;
   }
-  
+
   :global(.pdf-link-overlay:hover) {
     background-color: rgba(0, 123, 255, 0.1) !important;
   }

@@ -1,4 +1,7 @@
 # Development files
+/node_modules/
+/public/build/
+/example
 .vscode/
 .idea/
 *.log

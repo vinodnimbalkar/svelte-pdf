@@ -1,7 +1,7 @@
 {
   "name": "svelte-pdf",
-  "version": "2.0.0",
-  "description": "Enhanced fork of svelte-pdf with Svelte 5 support - A component for rendering PDF documents using PDF.js",
+  "version": "2.0.1",
+  "description": "svelte-pdf provides a component for rendering PDF documents using PDF.js",
   "keywords": [
     "pdf",
     "svelte-pdf",
@@ -16,15 +16,14 @@
     "sveltekit",
     "github-package"
   ],
-  "homepage": "https://github.com/TommasoPrinetti/svelte-pdf#readme",
+  "homepage": "https://github.com/vinodnimbalkar/svelte-pdf#readme",
   "bugs": {
-    "url": "https://github.com/TommasoPrinetti/svelte-pdf/issues"
+    "url": "https://github.com/vinodnimbalkar/svelte-pdf/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TommasoPrinetti/svelte-pdf.git"
+    "url": "git+https://github.com/vinodnimbalkar/svelte-pdf.git"
   },
-  "author": "Original: Vinod Nimbalkar, Fork: Tommaso Prinetti",
   "license": "MIT",
   "type": "module",
   "exports": {
@@ -37,7 +36,7 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/index.js",
+  "main": "index.js",
   "scripts": {
     "build": "vite build",
     "check": "svelte-check --tsconfig ./jsconfig.json",

@@ -1,89 +1,32 @@
-# svelte-pdf (Enhanced Fork)
+# svelte-pdf
 
-> **🎉 This is an adapted and improved version of the original [svelte-pdf](https://github.com/vinodnimbalkar/svelte-pdf) by [Vinod Nimbalkar](https://github.com/vinodnimbalkar).**
+[![MadeWithSvelte.com shield](https://madewithsvelte.com/storage/repo-shields/2346-shield.svg)](https://madewithsvelte.com/p/svelte-pdf/shield-link)
+![npm](https://img.shields.io/npm/dw/svelte-pdf?style=flat-square)
+![npm](https://img.shields.io/npm/v/svelte-pdf?style=flat-square)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/7a836d5a-d877-412f-8219-731b7a4d9d13/deploy-status)](https://app.netlify.com/sites/svelte-pdf/deploys)
 
-## What's Different?
+Simple svelte PDF Viewer component with controls like
 
-This fork provides several enhancements over the original package:
-
-### ✨ Key Improvements
-
-- **🚀 Svelte 5 Support** - Fully compatible with the latest Svelte 5
-- **📦 GitHub Installation Ready** - Install directly from GitHub without publishing to npm
-- **🔧 Modern Build System** - Updated to use SvelteKit 2 and latest tooling
-- **📝 TypeScript Definitions** - Improved type definitions for better DX
-- **🔄 Both Import Styles** - Supports both default and named imports
-- **🛠️ Better Developer Experience** - Auto-build on install with `prepare` script
-
-### 🙏 Credits
-
-All credit for the original implementation goes to [Vinod Nimbalkar](https://github.com/vinodnimbalkar). This fork simply modernizes the package and makes it easier to use as a GitHub dependency.
-
----
-
-## About
-
-A simple, powerful Svelte PDF Viewer component with built-in controls:
-
-- 📄 Page navigation
-- 🔍 Zoom controls
-- 🔄 Rotation
-- 🖨️ Print functionality
-- ⏱️ AutoFlip Page
-- 🔗 External link handling
+- Page navigation
+- Zoom
+- Rotation
+- Print
+- AutoFlip Page
+- External link handling
 
 ## Demo
 
-Check out the original demo: https://svelte-pdf.vinversion.com
+Source code of demo page is included in example directory.
 
-## Installation
+https://svelte-pdf.vinversion.com
 
-### From GitHub (Recommended for this fork)
+## How to install
 
-This enhanced version is designed to be installed directly from GitHub:
-
-```bash
-# Install from your GitHub repository
-npm install github:TommasoPrinetti/svelte-pdf
-
-# Or install from a specific branch
-npm install github:TommasoPrinetti/svelte-pdf#master
-
-# Or install from a specific commit/tag
-npm install github:TommasoPrinetti/svelte-pdf#v2.0.0
 ```
-
-**✨ What happens during installation:**
-
-- The package automatically builds itself using the `prepare` script
-- The `dist` folder is generated with all necessary files
-- No manual build steps required!
-
-### From Original npm Package
-
-To use the original version (without Svelte 5 support):
-
-```bash
 npm install svelte-pdf
 ```
 
-**Note:** The original npm package may not work with Svelte 5. Use this GitHub fork for Svelte 5 projects.
-
-## Usage
-
-### Import Styles
-
-This fork supports both default and named imports:
-
-```js
-// Default import (original style)
-import PdfViewer from "svelte-pdf";
-
-// Named import (also supported)
-import { PdfViewer } from "svelte-pdf";
-```
-
-### Basic Examples
+## How to use
 
 #### Using local path
 
@@ -162,48 +105,57 @@ You can control how external links within the PDF open using the `externalLinksT
 
 ## Props
 
-| prop name             | type       | default                                                                                     |
-| --------------------- | ---------- | ------------------------------------------------------------------------------------------- |
-| `url`                 | `string`   | `N/A`                                                                                       |
-| `data`                | `string`   | `N/A`                                                                                       |
-| `scale`               | `float`    | `1.8`                                                                                       |
-| `pageNum`             | `number`   | `1`                                                                                         |
-| `flipTime`            | `number`   | `120`                                                                                       |
-| `showButtons`         | `array`    | `["navigation", "zoom", "print", "rotate", "download", "autoflip", "timeInfo", "pageInfo"]` |
-| `showBorder`          | `boolean`  | `true`                                                                                      |
-| `downloadFileName`    | `string`   | `N/A`                                                                                       |
-| `onProgress`          | `function` | `undefined`                                                                                 |
-| `externalLinksTarget` | `string`   | `"_blank"`                                                                                  |
+| prop name            | type      | default                                                                                     |
+| -------------------- | --------- | ------------------------------------------------------------------------------------------- |
+| `url`                | `string`  | `N/A`                                                                                       |
+| `data`               | `string`  | `N/A`                                                                                       |
+| `scale`              | `float`   | `1.8`                                                                                       |
+| `pageNum`            | `number`  | `1`                                                                                         |
+| `flipTime`           | `number`  | `120`                                                                                       |
+| `showButtons`        | `array`   | `["navigation", "zoom", "print", "rotate", "download", "autoflip", "timeInfo", "pageInfo"]` |
+| `showBorder`         | `boolean` | `true`                                                                                      |
+| `downloadFileName`   | `string`  | `N/A`                                                                                       |
+| `onProgress`         | `function` | `undefined`                                                                                |
+| `externalLinksTarget` | `string`  | `"_blank"`                                                                                  |
 
-## Running the Demo
+Let me know if you need any further adjustments!
+## Examples
 
-To view the examples locally:
+To view the examples, clone the **svelte-pdf** repo and install the dependencies:
 
 ```bash
-# Clone this repository
-git clone https://github.com/TommasoPrinetti/svelte-pdf.git
-cd svelte-pdf
-
-# Install dependencies
-npm install
-
-# Run the dev server
-npm run dev
+$ git clone https://github.com/vinodnimbalkar/svelte-pdf.git
+$ cd example
+$ npm install
+$ npm run dev
 ```
 
-Then open your browser to the URL shown in the terminal (typically http://localhost:5173).
+Then run the **http://localhost:5000**:
 
-## SvelteKit SSR Compatibility
+## How to use it in Sapper with SSR enabled
 
-Since the `PdfViewer` component depends on browser APIs (`window` object), you need to handle it properly in SvelteKit:
+### 1. Install it as part of `devDependencies`
 
-### Option 1: Dynamic Import (Recommended)
+> When using Svelte components installed from npm, it needs the original component source (rather than any precompiled JavaScript that ships with the component). This allows the component to be rendered server-side, and also keeps your client-side app smaller...
 
-```svelte
+      -- [Rich Harris](https://github.com/Rich-Harris/svelte-workshop#using-external-components)
+
+We have to install `svelte-pdf` as part of `devDependencies`
+
+```bash
+npm install -D svelte-pdf
+```
+
+...this will cause it to get bundled (and therefore compiled) with your app.
+
+### 2. Make our `PdfViewer` component SSR compatible
+
+Since out `PdfViewer` component has a dependency on `window` object, we have to use dynamic import, from within the `onMount` function (which is only called on the client), so that our import code is never called on the server. [Refer to the official doc here...](https://sapper.svelte.dev/docs#Making_a_component_SSR_compatible)
+
+```bash
+
 <script>
   import { onMount } from "svelte";
-  import { browser } from '$app/environment';
-
   let PdfViewer;
 
   onMount(async () => {
@@ -212,64 +164,13 @@ Since the `PdfViewer` component depends on browser APIs (`window` object), you n
   });
 </script>
 
-{#if browser && PdfViewer}
-  <svelte:component this={PdfViewer} url="YOUR-PDF-URL" />
-{:else}
-  <p>Loading PDF viewer...</p>
-{/if}
-```
-
-### Option 2: Client-Only Import
-
-```svelte
-<script>
-  import PdfViewer from 'svelte-pdf';
-</script>
-
-<svelte:component this={PdfViewer} url="YOUR-PDF-URL" />
-```
-
-Then in your `+page.js` or `+layout.js`:
-
-```js
-export const ssr = false;
-```
-
-## Development
-
-### Building the Package
-
-```bash
-npm run package
-```
-
-This generates the `dist` folder with the compiled library.
-
-### Running Tests
-
-```bash
-npm run check
+<svelte:component this={PdfViewer} url="YOUR-PDF-URL"/>
 ```
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-For bug reports or feature requests related to the core functionality, please consider contributing to the [original repository](https://github.com/vinodnimbalkar/svelte-pdf).
-
-For issues specific to this fork (Svelte 5 compatibility, GitHub installation, etc.), please open an issue in this repository.
-
-## Acknowledgments
-
-**Original Package:** [svelte-pdf](https://github.com/vinodnimbalkar/svelte-pdf) by [Vinod Nimbalkar](https://github.com/vinodnimbalkar)
-
-This fork maintains the spirit and functionality of the original while modernizing it for current Svelte ecosystem standards.
+Feel free to open an issue (or even better, send a Pull Request). Contributions are very welcome!! 😄
 
 ## License
 
-**MIT License**
-
-Original work &copy; [Vinod Nimbalkar](https://github.com/vinodnimbalkar)  
-Modified work &copy; 2025 - This Fork
-
-See [LICENSE](LICENSE) file for details.
+**MIT &copy; [Vinod Nimbalkar](https://github.com/vinodnimbalkar/svelte-pdf/blob/master/LICENSE)**
